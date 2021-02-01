@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Pds.Contracts.FeedProcessor.Services\Pds.Contracts.FeedProcessor.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Integration\" />
+  </ItemGroup>
+
 </Project>
