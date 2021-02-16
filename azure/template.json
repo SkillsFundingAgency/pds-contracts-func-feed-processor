@@ -476,7 +476,7 @@
             "value": "[parameters('sharedStorageAccountName')]"
           },
           "containerName": {
-            "value": "ContractEvents"
+            "value": "contractevents"
           },
           "publicAccess": {
             "value": "None"
