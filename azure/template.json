@@ -459,6 +459,30 @@
           }
         }
       }
+    },
+    {
+      "apiVersion": "2017-05-10",
+      "resourceGroup": "[parameters('sharedResourceGroupName')]",
+      "name": "[concat(parameters('sharedStorageAccountName'), '-blob-contractevents')]",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('deploymentUrlBase'), 'storage-container.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "storageAccountName": {
+            "value": "[parameters('sharedStorageAccountName')]"
+          },
+          "containerName": {
+            "value": "ContractEvents"
+          },
+          "publicAccess": {
+            "value": "None"
+          }
+        }
+      }
     }
   ],
   "outputs": {
