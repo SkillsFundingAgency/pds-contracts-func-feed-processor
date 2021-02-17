@@ -483,6 +483,27 @@
           }
         }
       }
+    },
+    {
+      "apiVersion": "2017-05-10",
+      "name": "storage-table-contract-feedreader-settings",
+      "resourceGroup": "[parameters('sharedResourceGroupName')]",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[concat(variables('deploymentUrlBase'),'storage-table.json')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "storageAccountName": {
+            "value": "[parameters('sharedStorageAccountName')]"
+          },
+          "tableName": {
+            "value": "ContractFeedReaderSettings"
+          }
+        }
+      }
     }
   ],
   "outputs": {
