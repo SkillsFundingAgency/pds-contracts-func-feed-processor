@@ -1,12 +1,13 @@
 ﻿using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.WebJobs;
 using Pds.Contracts.FeedProcessor.Services.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Pds.Contracts.FeedProcessor.Services.Interfaces
 {
+    /// <summary>
+    /// Todo.
+    /// </summary>
     public interface IContractEventSessionQueuePopulator
     {
         /// <summary>

@@ -7,13 +7,25 @@
   <ItemGroup>
     <None Remove="Pds.Contracts.FeedProcessor.Services.csproj.transform" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Schema\11_03\contract_corporate_schema_v11.03.xsd" />
+  </ItemGroup>
   
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.8.0" />
+    <PackageReference Include="Microsoft.Azure.Cosmos.Table" Version="1.0.8" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Core" Version="3.0.25" />
     <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.ServiceBus" Version="4.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.11" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Pds.Audit.Api.Client" Version="1.1.1" />
+    <PackageReference Include="Pds.Core.ApiClient" Version="4.1.0" />
     <PackageReference Include="Pds.Core.CodeAnalysis.StyleCop" Version="2.0.0" />
+    <PackageReference Include="System.ServiceModel.Syndication" Version="5.0.0" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
+    <PackageReference Include="Pds.Core.Logging" Version="2.0.3" />
   </ItemGroup>
 
 </Project>

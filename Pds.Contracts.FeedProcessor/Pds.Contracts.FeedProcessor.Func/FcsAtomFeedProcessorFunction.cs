@@ -4,9 +4,8 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using Pds.Contracts.FeedProcessor.Services.Interfaces;
-using System;
 using System.IO;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace Pds.Contracts.FeedProcessor.Func
 {
@@ -15,50 +14,39 @@ namespace Pds.Contracts.FeedProcessor.Func
     /// </summary>
     public class FcsAtomFeedProcessorFunction
     {
-        private readonly IFcsFeedReaderService _feedReaderService;
-        private readonly IContractEventSessionQueuePopulator _queuePopulator;
+        private readonly IFeedProcessor _feedProcessor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FcsAtomFeedProcessorFunction" /> class.
         /// </summary>
-        /// <param name="feedReaderService">The example service.</param>
-        /// <param name="queuePopulator">The queue populator.</param>
-        public FcsAtomFeedProcessorFunction(IFcsFeedReaderService feedReaderService, IContractEventSessionQueuePopulator queuePopulator)
+        /// <param name="feedProcessor">The feed processor.</param>
+        public FcsAtomFeedProcessorFunction(IFeedProcessor feedProcessor)
         {
-            _feedReaderService = feedReaderService;
-            _queuePopulator = queuePopulator;
+            _feedProcessor = feedProcessor;
         }
 
         /// <summary>
         /// Entry point to the Azure Function.
         /// </summary>
         /// <param name="req">The req.</param>
-        /// <param name="collector">The collector.</param>
+        /// <param name="queueOutput">The queue output.</param>
         /// <param name="log">The logger.</param>
-        [FunctionName("FCSAtomFeedProcessorFunction")]
-        public void Run(
+        /// <returns>
+        /// A <see cref="Task" /> representing the asynchronous operation.
+        /// </returns>
+        [FunctionName("FCSAtomFeedProcessorFunctionHttpFunction")]
+        public async Task RunAsync(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "feed")] HttpRequest req,
-            [ServiceBus("%ContractEventsSessionQueue%", Connection = "ServiceBusConnection")] ICollector<Message> collector,
+            [ServiceBus("%ContractEventsSessionQueue%", Connection = "ServiceBusConnection")] ICollector<Message> queueOutput,
             ILogger log)
         {
-            if (req is null)
-            {
-                throw new ArgumentNullException(nameof(req));
-            }
-
-            if (collector is null)
-            {
-                throw new ArgumentNullException(nameof(collector));
-            }
-
             using var reader = new StreamReader(req.Body);
             var payload = reader.ReadToEnd();
-            log?.LogInformation($"HttpRequest trigger: FCSAtomFeedProcessorFunction  function with payload: {payload}.");
+            log?.LogInformation($"HttpRequest trigger: FCSAtomFeedProcessorFunctionHttpFunction function.");
 
-            var contractEvents = _feedReaderService.GetContractEvents(payload);
-            _queuePopulator.CreateContractEvents(contractEvents, collector);
+            await _feedProcessor.ExtractAndPopulateQueueAsync(payload, queueOutput);
 
-            log?.LogInformation($"HttpRequest trigger: FCSAtomFeedProcessorFunction: function completed creating {contractEvents.Count()} messages.");
+            log?.LogInformation($"HttpRequest trigger: FCSAtomFeedProcessorFunction: function completed creating messages.");
         }
     }
 }

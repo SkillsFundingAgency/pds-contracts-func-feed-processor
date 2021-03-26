@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pds.Contracts.FeedProcessor.Func", "Pds.Contracts.FeedProcessor.Func\Pds.Contracts.FeedProcessor.Func.csproj", "{7F75400C-CC24-4CE2-AA39-95F5DD6209F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pds.Contracts.FeedProcessor.Func", "Pds.Contracts.FeedProcessor.Func\Pds.Contracts.FeedProcessor.Func.csproj", "{7F75400C-CC24-4CE2-AA39-95F5DD6209F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pds.Contracts.FeedProcessor.Func.Tests", "Pds.Contracts.FeedProcessor.Func.Tests\Pds.Contracts.FeedProcessor.Func.Tests.csproj", "{46329B36-7D13-49F9-A412-22632D674F92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pds.Contracts.FeedProcessor.Func.Tests", "Pds.Contracts.FeedProcessor.Func.Tests\Pds.Contracts.FeedProcessor.Func.Tests.csproj", "{46329B36-7D13-49F9-A412-22632D674F92}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pds.Contracts.FeedProcessor.Services", "Pds.Contracts.FeedProcessor.Services\Pds.Contracts.FeedProcessor.Services.csproj", "{67FA69AA-82DD-4327-8A1B-970E050B5259}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pds.Contracts.FeedProcessor.Services", "Pds.Contracts.FeedProcessor.Services\Pds.Contracts.FeedProcessor.Services.csproj", "{67FA69AA-82DD-4327-8A1B-970E050B5259}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pds.Contracts.FeedProcessor.Services.Tests", "Pds.Contracts.FeedProcessor.Services.Tests\Pds.Contracts.FeedProcessor.Services.Tests.csproj", "{BD9A64D6-A148-4526-9896-DE6B4212FAEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pds.Contracts.FeedProcessor.Services.Tests", "Pds.Contracts.FeedProcessor.Services.Tests\Pds.Contracts.FeedProcessor.Services.Tests.csproj", "{BD9A64D6-A148-4526-9896-DE6B4212FAEE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{44AE8B56-7D95-4B12-A525-F3D1B119E01C}"
 	ProjectSection(SolutionItems) = preProject

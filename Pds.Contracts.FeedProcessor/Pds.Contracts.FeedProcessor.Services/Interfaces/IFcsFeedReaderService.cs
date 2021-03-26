@@ -10,10 +10,16 @@ namespace Pds.Contracts.FeedProcessor.Services.Interfaces
     public interface IFcsFeedReaderService
     {
         /// <summary>
-        /// Gets the contract events.
+        /// Reads the self page.
         /// </summary>
-        /// <param name="exampleAtomFeed">The example atom feed.</param>
-        /// <returns>A readonly collection of contract events.</returns>
-        IEnumerable<ContractEvent> GetContractEvents(string exampleAtomFeed);
+        /// <returns>A collection of feed entries.</returns>
+        Task<IList<FeedEntry>> ReadSelfPageAsync();
+
+        /// <summary>
+        /// Extracts the contract events from feed page asynchronous.
+        /// </summary>
+        /// <param name="payload">The payload.</param>
+        /// <returns> A <see cref="Task"/> representing the asynchronous operation.</returns>
+        IList<FeedEntry> ExtractContractEventsFromFeedPageAsync(string payload);
     }
 }

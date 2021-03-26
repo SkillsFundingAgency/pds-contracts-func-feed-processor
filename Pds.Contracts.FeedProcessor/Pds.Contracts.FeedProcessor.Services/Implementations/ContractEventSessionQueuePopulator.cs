@@ -3,7 +3,6 @@ using Microsoft.Azure.WebJobs;
 using Newtonsoft.Json;
 using Pds.Contracts.FeedProcessor.Services.Interfaces;
 using Pds.Contracts.FeedProcessor.Services.Models;
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -22,7 +21,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             {
                 messageCollector.Add(new Message
                 {
-                    SessionId = DateTime.Now.Second.ToString(),
+                    SessionId = contractEvent.ContractNumber,
                     Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(contractEvent))
                 });
             }

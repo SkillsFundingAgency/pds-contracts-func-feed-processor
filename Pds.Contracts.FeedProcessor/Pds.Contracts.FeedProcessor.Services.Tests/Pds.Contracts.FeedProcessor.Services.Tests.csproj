@@ -19,11 +19,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Pds.Contracts.FeedProcessor.Func\Pds.Contracts.FeedProcessor.Func.csproj" />
     <ProjectReference Include="..\Pds.Contracts.FeedProcessor.Services\Pds.Contracts.FeedProcessor.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Integration\" />
+    <None Update="Documents\11_03\ESIF-9999-v5-Partial.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

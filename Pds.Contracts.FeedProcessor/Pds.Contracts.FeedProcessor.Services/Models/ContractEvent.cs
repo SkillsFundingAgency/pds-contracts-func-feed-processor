@@ -1,36 +1,102 @@
-﻿using System;
+﻿using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Pds.Contracts.FeedProcessor.Services.Models
 {
     /// <summary>
-    /// Atom feed.
+    /// Represents an contract event extracted from the Atom feed.
     /// </summary>
     public class ContractEvent
     {
         /// <summary>
-        /// Gets or sets the example message.
+        /// Gets or sets the contract event bookmark id.
         /// </summary>
-        /// <value>
-        /// The example message.
-        /// </value>
-        public string ExampleMessage { get; set; }
+        public Guid BookmarkId { get; set; }
 
         /// <summary>
-        /// Gets or sets the example feed time.
+        /// Gets or sets the UKPRN.
         /// </summary>
-        /// <value>
-        /// The example feed time.
-        /// </value>
-        public DateTime ExampleFeedTime { get; set; }
+        public int UKPRN { get; set; }
 
         /// <summary>
-        /// Gets the example sequence identifier.
+        /// Gets or sets the contract number.
         /// </summary>
-        /// <value>
-        /// The example sequence identifier.
-        /// </value>
-        public int ExampleSequenceId { get; set; }
+        public string ContractNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the parent contract number.
+        /// </summary>
+        public string ParentContractNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the contract version.
+        /// </summary>
+        public int ContractVersion { get; set; }
+
+        /// <summary>
+        /// Gets or sets the contract status.
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ContractStatus Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the contract parent status.
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ContractParentStatus ParentStatus { get; set; }
+
+        /// <summary>
+        /// Gets or sets the amendment type.
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ContractAmendmentType AmendmentType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the funding type.
+        /// </summary>
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ContractFundingType FundingType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the start date.
+        /// </summary>
+        public DateTime? StartDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the end date.
+        /// </summary>
+        public DateTime? EndDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the signed on date.
+        /// </summary>
+        public DateTime? SignedOn { get; set; }
+
+        /// <summary>
+        /// Gets or sets the contract type.
+        /// </summary>
+        public string Type { get; set; }
+
+        /// <summary>
+        /// Gets or sets the contract allocations collection.
+        /// </summary>
+        public IEnumerable<ContractAllocation> ContractAllocations { get; set; }
+
+        /// <summary>
+        /// Gets or sets the contract value.
+        /// </summary>
+        public decimal Value { get; set; }
+
+        /// <summary>
+        /// Gets or sets the contract period value.
+        /// </summary>
+        public string ContractPeriodValue { get; set; }
+
+        /// <summary>
+        /// Gets or sets the contract xml file name.
+        /// </summary>
+        public string ContractEventXml { get; set; }
     }
 }
