@@ -16,8 +16,29 @@ jobs:
 - job: 'BuildAndPublish'
   workspace:
     clean: all
-
   steps:
+  - task: DownloadSecureFile@1
+    name: downloadSchemaV1103
+    displayName: 'Download contract_corporate_schema_v11.03.xsd'
+    inputs:
+      secureFile: contract_corporate_schema_v11.03.xsd
+
+  - task: PowerShell@2
+    inputs:
+        targetType: inline
+        script: |
+
+          $sourceDestination = "$(System.DefaultWorkingDirectory)\Pds.Contracts.FeedProcessor\Pds.Contracts.FeedProcessor.Services\Schema\11_03"
+
+          Write-Host "Copying schema file from $(downloadSchemaV1103.secureFilePath) to target '$sourceDestination\contract_corporate_schema_v11.03.xsd'"
+
+          if(-not (Test-Path -Path "$sourceDestination")) {
+            New-Item -Type Directory -Path "$sourceDestination"
+          }
+
+          Copy-Item -Path "$(downloadSchemaV1103.secureFilePath)" -Destination "$sourceDestination\contract_corporate_schema_v11.03.xsd"
+          Write-Host "File copied!"
+
   - task: UseDotNet@2
     displayName: Select dotnet core 3.1.x
     inputs:
