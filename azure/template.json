@@ -192,6 +192,19 @@
                 "value": "[parameters('resourceEnvironmentName')]"
               },
               {
+                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                "value": "[reference(resourceId(parameters('sharedResourceGroupName'), 'microsoft.insights/components', parameters('sharedAppInsightsName')),'2015-05-01').InstrumentationKey]"
+              },
+              {
+                "name": "PdsApplicationInsights:InstrumentationKey",
+                "value": "[reference(resourceId(parameters('sharedResourceGroupName'), 'microsoft.insights/components', parameters('sharedAppInsightsName')),'2015-05-01').InstrumentationKey]"
+              },
+              {
+                "name": "PdsApplicationInsights:Environment",
+                "value": "[parameters('resourceEnvironmentName')]"
+              },
+
+              {
                 "name": "AzureWebJobsStorage",
                 "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('sharedStorageAccountName'),';AccountKey=',listKeys(resourceId(parameters('sharedResourceGroupName'),'Microsoft.Storage/storageAccounts',parameters('sharedStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ';EndpointSuffix=core.windows.net')]"
               },
@@ -204,45 +217,59 @@
                 "value": "dotnet"
               },
               {
-                "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                "value": "[reference(resourceId(parameters('sharedResourceGroupName'), 'microsoft.insights/components', parameters('sharedAppInsightsName')),'2015-05-01').InstrumentationKey]"
-              },
-              {
-                "name": "PdsApplicationInsights:InstrumentationKey",
-                "value": "[reference(resourceId(parameters('sharedResourceGroupName'), 'microsoft.insights/components', parameters('sharedAppInsightsName')),'2015-05-01').InstrumentationKey]"
-              },
-              {
-                "name": "PdsApplicationInsights:Environment",
-                "value": "[parameters('resourceEnvironmentName')]"
+                "name": "WEBSITE_TIME_ZONE",
+                "value": "GMT Standard Time"
               },
               {
                 "name": "ContractEventsSessionQueue",
                 "value": "[variables('ContractEventQueueName')]"
               },
               {
-                "name": "FcsApiClientConfiguration:ApiBaseAddress",
-                "value": "[parameters('FcsApiBaseAddress')]"
+                "name": "TimerInterval",
+                "value": "*/30 * * * * *"
               },
               {
-                "name": "FcsApiClientConfiguration:Authority",
-                "value": "https://login.microsoftonline.com/"
+                "name": "ValidationServiceSettings:SchemaVersion",
+                "value": "11_03"
               },
               {
-                "name": "FcsApiClientConfiguration:TenantId",
-                "value": "[parameters('FcsApiAzureAdTenant')]"
+                "name": "ValidationServiceSettings:SchemaManifestFilename",
+                "value": "contract_corporate_schema_v11.03.xsd"
               },
               {
-                "name": "FcsApiClientConfiguration:ClientId",
-                "value": "[parameters('FcsApiAzureAdClientId')]"
+                "name": "AzureStorageAccountOptions:ConnectionString",
+                "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('sharedStorageAccountName'),';AccountKey=',listKeys(resourceId(parameters('sharedResourceGroupName'),'Microsoft.Storage/storageAccounts',parameters('sharedStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ';EndpointSuffix=core.windows.net')]"
+              },
+
+              {
+                "name": "AzureStorageAccountOptions:BlobAccessOptions:XmlStorageContainer",
+                "value": "contractevents"
               },
               {
-                "name": "FcsApiClientConfiguration:ClientSecret",
-                "value": "[parameters('FcsApiAzureAdClientSecret')]"
+                "name": "AzureStorageAccountOptions:BlobAccessOptions:RetryCount",
+                "value": "3"
               },
               {
-                "name": "FcsApiClientConfiguration:AppUri",
-                "value": "[parameters('FcsApiAzureAdAppUri')]"
+                "name": "AzureStorageAccountOptions:BlobAccessOptions:Delay",
+                "value": "0.00:00:15"
               },
+              {
+                "name": "AzureStorageAccountOptions:TableAccessOptions:ConfigTableName",
+                "value": "ContractFeedReaderSettings"
+              },
+              {
+                "name": "AzureStorageAccountOptions:TableAccessOptions:PartitionKey",
+                "value": "FeedProcessor"
+              },
+              {
+                "name": "AzureStorageAccountOptions:TableAccessOptions:DeltaBackOff",
+                "value": "0.00:00:15"
+              },
+              {
+                "name": "AzureStorageAccountOptions:TableAccessOptions:MaxAttempts",
+                "value": "3"
+              },
+
               {
                 "name": "AuditApiClientConfiguration:ApiBaseAddress",
                 "value": "[parameters('AuditApiBaseAddress')]"
@@ -266,6 +293,54 @@
               {
                 "name": "AuditApiClientConfiguration:AppUri",
                 "value": "[parameters('AuditApiAzureAdAppUri')]"
+              },
+              {
+                "name": "AuditApiClientConfiguration:ShouldSkipAuthentication",
+                "value": "false"
+              },
+              {
+                "name": "FeedReaderOptions:FcsAtomFeedSelfPageEndpoint",
+                "value": "/api/contracts/notifications"
+              },
+              {
+                "name": "FeedReaderOptions:ApiBaseAddress",
+                "value": "[parameters('FcsApiBaseAddress')]"
+              },
+              {
+                "name": "FeedReaderOptions:Authority",
+                "value": "https://login.microsoftonline.com/"
+              },
+              {
+                "name": "FeedReaderOptions:ClientId",
+                "value": "[parameters('FcsApiAzureAdClientId')]"
+              },
+              {
+                "name": "FeedReaderOptions:ClientSecret",
+                "value": "[parameters('FcsApiAzureAdClientSecret')]"
+              },
+              {
+                "name": "FeedReaderOptions:TenantId",
+                "value": "[parameters('FcsApiAzureAdTenant')]"
+              },
+              {
+                "name": "FeedReaderOptions:AppUri",
+                "value": "[parameters('FcsApiAzureAdAppUri')]"
+              },
+              {
+                "name": "FeedReaderOptions:HttpPolicyOptions:HttpRetryCount",
+                "value": "3"
+              },
+              {
+                "name": "FeedReaderOptions:HttpPolicyOptions:HttpRetryBackoffPower",
+                "value": "2"
+              },
+              {
+                "name": "FeedReaderOptions:HttpPolicyOptions:CircuitBreakerToleranceCount",
+                "value": "5"
+              },
+              {
+                "name": "FeedReaderOptions:HttpPolicyOptions:CircuitBreakerDurationOfBreak",
+                "value": "0.00:00:15"
               }
             ]
           }
