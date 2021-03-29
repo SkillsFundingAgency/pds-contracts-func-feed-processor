@@ -1,12 +1,10 @@
 ﻿using Microsoft.Azure.ServiceBus;
 using Microsoft.Azure.WebJobs;
-using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 using Pds.Contracts.FeedProcessor.Services.Configuration;
 using Pds.Contracts.FeedProcessor.Services.Interfaces;
-using Pds.Contracts.FeedProcessor.Services.Models;
-using System.Collections.Generic;
+using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Pds.Contracts.FeedProcessor.Services.Implementations
@@ -18,70 +16,98 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
     public class FeedProcessor : IFeedProcessor
     {
         private readonly IFcsFeedReaderService _fcsFeedReader;
-        private readonly IContractEventProcessor _eventProcessor;
+        private readonly IContractEventSessionQueuePopulator _queuePopulator;
         private readonly IFeedProcessorConfiguration _configuration;
+        private readonly ILogger<FeedProcessor> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FeedProcessor" /> class.
         /// </summary>
         /// <param name="fcsFeedReader">The FCS feed reader.</param>
-        /// <param name="eventProcessor">The event processor.</param>
+        /// <param name="queuePopulator">The queue populator.</param>
         /// <param name="configuration">The configuration.</param>
-        public FeedProcessor(IFcsFeedReaderService fcsFeedReader, IContractEventProcessor eventProcessor, IFeedProcessorConfiguration configuration)
+        /// <param name="logger">The logger.</param>
+        public FeedProcessor(
+            IFcsFeedReaderService fcsFeedReader,
+            IContractEventSessionQueuePopulator queuePopulator,
+            IFeedProcessorConfiguration configuration,
+            ILogger<FeedProcessor> logger)
         {
             _fcsFeedReader = fcsFeedReader;
-            _eventProcessor = eventProcessor;
+            _queuePopulator = queuePopulator;
             _configuration = configuration;
+            _logger = logger;
         }
 
         /// <inheritdoc/>
-        public async Task ExtractAndPopulateQueueAsync(ICollector<Message> queue)
+        public async Task ExtractAndPopulateQueueAsync(IAsyncCollector<Message> queue)
         {
-            var feedEntries = await _fcsFeedReader.ReadSelfPageAsync();
             var lastReadBookmarkEntry = await _configuration.GetLastReadBookmarkId();
+            var lastReadPage = await _configuration.GetLastReadPage();
+            var numberOfPagesToProcess = await _configuration.GetNumberOfPagesToProcess();
 
-            if (feedEntries.Any(e => e.Id == lastReadBookmarkEntry))
+            _logger.LogInformation($"{nameof(ExtractAndPopulateQueueAsync)} - Starting to process contract events, Last read bookmark is [{lastReadBookmarkEntry}] and last read page is [{lastReadPage}] will be processing upto a maximum of [{numberOfPagesToProcess}] pages in this run.");
+
+            var selfPage = await _fcsFeedReader.ReadSelfPageAsync();
+            if (selfPage.Entries.Any(e => e.Id == lastReadBookmarkEntry))
             {
                 // extract all entries after that.
-                var lastBookmark = feedEntries.Single(e => e.Id == lastReadBookmarkEntry);
-                var newEntries = feedEntries.Skip(feedEntries.IndexOf(lastBookmark) + 1);
+                var lastBookmark = selfPage.Entries.Single(e => e.Id == lastReadBookmarkEntry);
+                var newEntries = selfPage.Entries.Skip(selfPage.Entries.IndexOf(lastBookmark) + 1);
 
-                await PopulateSessionQueue(queue, newEntries);
+                _logger.LogInformation($"{nameof(ExtractAndPopulateQueueAsync)} - On [Self page] found [{newEntries.Count()}] new contract events to process.");
+                await _queuePopulator.PopulateSessionQueue(queue, newEntries);
             }
             else
             {
                 // Stroy 3.
+                await ReadArchives(queue, lastReadBookmarkEntry, lastReadPage, numberOfPagesToProcess);
             }
         }
 
         /// <inheritdoc/>
-        public async Task ExtractAndPopulateQueueAsync(string payload, ICollector<Message> queueOutput)
+        public async Task ExtractAndPopulateQueueAsync(string payload, IAsyncCollector<Message> queueOutput)
         {
             var feedEntries = _fcsFeedReader.ExtractContractEventsFromFeedPageAsync(payload);
-            await PopulateSessionQueue(queueOutput, feedEntries);
+            await _queuePopulator.PopulateSessionQueue(queueOutput, feedEntries.Entries);
         }
 
-        private async Task PopulateSessionQueue(ICollector<Message> queue, IEnumerable<FeedEntry> newEntries)
+        private async Task ReadArchives(IAsyncCollector<Message> queue, Guid lastReadBookmarkEntry, int lastReadPage, int numberOfPagesToProcess)
         {
-            foreach (var item in newEntries)
+            // Go to last read page.
+            var thisPage = await _fcsFeedReader.ReadPageAsync(lastReadPage);
+            if (!thisPage.Entries.Any(e => e.Id == lastReadBookmarkEntry))
             {
-                var result = await _eventProcessor.ProcessEventsAsync(item);
-                switch (result.Result)
+                throw new InvalidOperationException($"{nameof(ExtractAndPopulateQueueAsync)} - Last read bookmark [{lastReadBookmarkEntry}] cannot be found on last read page [{lastReadPage}] abort processing contract events.");
+            }
+
+            // extract all entries after last read bookmark.
+            var lastBookmark = thisPage.Entries.Single(e => e.Id == lastReadBookmarkEntry);
+            var newEntries = thisPage.Entries.Skip(thisPage.Entries.IndexOf(lastBookmark) + 1);
+
+            _logger.LogInformation($"{nameof(ExtractAndPopulateQueueAsync)} - On [{lastReadPage}] found [{newEntries.Count()}] new contract events to process.");
+            if (newEntries.Any())
+            {
+                numberOfPagesToProcess--;
+                await _queuePopulator.PopulateSessionQueue(queue, newEntries);
+            }
+
+            while (numberOfPagesToProcess > 0 && !thisPage.IsSelfPage)
+            {
+                numberOfPagesToProcess--;
+                thisPage = thisPage.NextPageNumber > 0 ? await _fcsFeedReader.ReadPageAsync(thisPage.NextPageNumber) : await _fcsFeedReader.ReadSelfPageAsync();
+
+                // double check to ensure when we are on self page, we have completed previous pages and we are not missing any big load of events since we read.
+                int prevPage = 0;
+                if (thisPage.IsSelfPage && thisPage.PreviousPageNumber != (prevPage = await _configuration.GetLastReadPage()))
                 {
-                    case ContractProcessResultType.Successful:
-                        queue.Add(new Message
-                        {
-                            SessionId = result.ContactEvent.First().ContractNumber,
-                            Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(result.ContactEvent))
-                        });
-                        break;
-                    case ContractProcessResultType.StatusValidationFailed:
-                    case ContractProcessResultType.FundingTypeValidationFailed:
-                    default:
-                        break;
+                    thisPage = await _fcsFeedReader.ReadPageAsync(prevPage + 1);
                 }
 
-                await _configuration.SetLastReadBookmarkId(item.Id);
+                _logger.LogInformation($"{nameof(ExtractAndPopulateQueueAsync)} - On [{(thisPage.IsSelfPage ? "Self" : thisPage.CurrentPageNumber.ToString())}] found [{thisPage.Entries.Count()}] new contract events to process.");
+
+                await _queuePopulator.PopulateSessionQueue(queue, thisPage.Entries);
+                await _configuration.SetLastReadPage(thisPage.CurrentPageNumber);
             }
         }
     }

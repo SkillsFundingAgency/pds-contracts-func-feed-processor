@@ -108,7 +108,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 contractList.Add(evt);
             }
 
-            rtn.ContactEvent = contractList;
+            rtn.ContactEvents = contractList;
             if (rtn.Result == ContractProcessResultType.OperationFailed)
             {
                 rtn.Result = ContractProcessResultType.Successful;

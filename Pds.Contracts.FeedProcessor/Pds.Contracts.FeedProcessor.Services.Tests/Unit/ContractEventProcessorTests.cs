@@ -59,8 +59,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             // Arrange
             var feed = GetFeedEntry();
             var expected = GetOneContractProcessResult();
-            expected.ContactEvent.First().BookmarkId = feed.Id;
-            expected.ContactEvent.First().ContractEventXml = GetFilename(feed, expected.ContactEvent.First());
+            expected.ContactEvents.First().BookmarkId = feed.Id;
+            expected.ContactEvents.First().ContractEventXml = GetFilename(feed, expected.ContactEvents.First());
 
             var actualBackingObject = GetOneContractProcessResult();
 
@@ -123,8 +123,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             // Arrange
             var feed = GetFeedEntry();
             var expected = GetOneContractProcessResult();
-            expected.ContactEvent.First().BookmarkId = feed.Id;
-            expected.ContactEvent.First().ContractEventXml = GetFilename(feed, expected.ContactEvent.First());
+            expected.ContactEvents.First().BookmarkId = feed.Id;
+            expected.ContactEvents.First().ContractEventXml = GetFilename(feed, expected.ContactEvents.First());
 
             var actualBackingObject = GetOneContractProcessResult();
 
@@ -178,7 +178,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         {
             return new ContractProcessResult()
             {
-                ContactEvent = new List<ContractEvent>(),
+                ContactEvents = new List<ContractEvent>(),
                 Result = ContractProcessResultType.Successful
             };
         }
@@ -187,7 +187,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         {
             return new ContractProcessResult()
             {
-                ContactEvent = new List<ContractEvent>()
+                ContactEvents = new List<ContractEvent>()
                 {
                     new ContractEvent()
                     {

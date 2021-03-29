@@ -37,7 +37,7 @@ namespace Pds.Contracts.FeedProcessor.Func
         [FunctionName("FCSAtomFeedProcessorFunctionHttpFunction")]
         public async Task RunAsync(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = "feed")] HttpRequest req,
-            [ServiceBus("%ContractEventsSessionQueue%", Connection = "ServiceBusConnection")] ICollector<Message> queueOutput,
+            [ServiceBus("%ContractEventsSessionQueue%", Connection = "ServiceBusConnection")] IAsyncCollector<Message> queueOutput,
             ILogger log)
         {
             using var reader = new StreamReader(req.Body);

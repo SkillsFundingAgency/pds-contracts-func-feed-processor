@@ -2,19 +2,21 @@
 using Microsoft.Azure.WebJobs;
 using Pds.Contracts.FeedProcessor.Services.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Pds.Contracts.FeedProcessor.Services.Interfaces
 {
     /// <summary>
-    /// Todo.
+    /// Interface to support population of contract events to session queue.
     /// </summary>
     public interface IContractEventSessionQueuePopulator
     {
         /// <summary>
-        /// Creates the contract events in service bus session queue.
+        /// Populates the session queue.
         /// </summary>
-        /// <param name="contractEvents">The contract events.</param>
-        /// <param name="messageCollector">The message collector.</param>
-        void CreateContractEvents(IEnumerable<ContractEvent> contractEvents, ICollector<Message> messageCollector);
+        /// <param name="queue">The queue.</param>
+        /// <param name="newEntries">The new entries.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task PopulateSessionQueue(IAsyncCollector<Message> queue, IEnumerable<FeedEntry> newEntries);
     }
 }

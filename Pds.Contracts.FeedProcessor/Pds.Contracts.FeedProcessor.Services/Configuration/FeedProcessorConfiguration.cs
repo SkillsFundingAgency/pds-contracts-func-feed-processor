@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Pds.Contracts.FeedProcessor.Services.Configuration
@@ -12,6 +14,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration
     {
         private const string _lastReadBookmarkId = "LastReadBookmarkId";
         private const string _lastReadPage = "LastReadPage";
+        private const string _numberOfPagesToProcess = "NumberOfPagesToProcess";
 
         private const string _validationServiceFundingTypes = "ValidationServiceFundingTypes";
         private const string _validationServiceStatuses = "ValidationServiceStatuses";
@@ -49,6 +52,12 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration
         public async Task SetLastReadPage(int lastReadPage)
         {
             await _configReader.SetConfigAsync(_lastReadPage, lastReadPage);
+        }
+
+        /// <inheritdoc/>
+        public async Task<int> GetNumberOfPagesToProcess()
+        {
+            return await _configReader.GetConfigAsync<int>(_numberOfPagesToProcess).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>

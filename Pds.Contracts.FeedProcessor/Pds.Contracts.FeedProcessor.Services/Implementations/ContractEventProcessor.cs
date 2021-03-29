@@ -60,7 +60,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             {
                 try
                 {
-                    foreach (var item in result.ContactEvent)
+                    foreach (var item in result.ContactEvents)
                     {
                         item.BookmarkId = feedEntry.Id;
 

@@ -272,7 +272,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             IContractValidationService_Setup_ValidateXmlWithSchema();
 
             var expected = GeneratePocoForESIF9999();
-            expected.ContactEvent.First().StartDate = null;
+            expected.ContactEvents.First().StartDate = null;
 
             var sut = GetDeserializer();
 
@@ -305,7 +305,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             IContractValidationService_Setup_ValidateXmlWithSchema();
 
             var expected = GeneratePocoForESIF9999();
-            expected.ContactEvent.First().EndDate = null;
+            expected.ContactEvents.First().EndDate = null;
 
             var sut = GetDeserializer();
 
@@ -338,7 +338,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             IContractValidationService_Setup_ValidateXmlWithSchema();
 
             var expected = GeneratePocoForESIF9999();
-            expected.ContactEvent.First().SignedOn = null;
+            expected.ContactEvents.First().SignedOn = null;
 
             var sut = GetDeserializer();
 
@@ -420,7 +420,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             IContractValidationService_Setup_ValidateXmlWithSchema();
 
             var expected = GeneratePocoForESIF9999();
-            expected.ContactEvent.First().FundingType = expectedType;
+            expected.ContactEvents.First().FundingType = expectedType;
 
             var sut = GetDeserializer();
 
@@ -457,7 +457,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             IContractValidationService_Setup_ValidateXmlWithSchema();
 
             var expected = GeneratePocoForESIF9999();
-            expected.ContactEvent.First().ParentStatus = expectedParentStatus;
+            expected.ContactEvents.First().ParentStatus = expectedParentStatus;
 
             var sut = GetDeserializer();
 
@@ -502,7 +502,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             IContractValidationService_Setup_ValidateXmlWithSchema();
 
             var expected = GeneratePocoForESIF9999();
-            expected.ContactEvent.First().Status = expectedStatus;
+            expected.ContactEvents.First().Status = expectedStatus;
 
             var sut = GetDeserializer();
 
@@ -538,7 +538,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             IContractValidationService_Setup_ValidateXmlWithSchema();
 
             var expected = GeneratePocoForESIF9999();
-            expected.ContactEvent.First().AmendmentType = expectedAmendment;
+            expected.ContactEvents.First().AmendmentType = expectedAmendment;
 
             var sut = GetDeserializer();
 
@@ -561,7 +561,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             // Contract Event matching the data from the XML file.
             return new ContractProcessResult()
             {
-                ContactEvent = new List<ContractEvent>()
+                ContactEvents = new List<ContractEvent>()
                 {
                     new ContractEvent()
                     {
@@ -612,7 +612,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         private static ContractProcessResult GeneratePocoForESIF9999()
         => new ContractProcessResult()
         {
-            ContactEvent = new List<ContractEvent>()
+            ContactEvents = new List<ContractEvent>()
             {
                 new ContractEvent()
                 {

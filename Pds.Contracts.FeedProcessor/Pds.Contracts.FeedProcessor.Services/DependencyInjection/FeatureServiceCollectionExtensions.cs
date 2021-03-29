@@ -1,9 +1,7 @@
 ﻿using Azure.Storage.Blobs;
+using Microsoft.Azure.Cosmos.Table;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.RetryPolicies;
-using Microsoft.WindowsAzure.Storage.Table;
 using Pds.Audit.Api.Client.Registrations;
 using Pds.Contracts.FeedProcessor.Services.Configuration;
 using Pds.Contracts.FeedProcessor.Services.Extensions;
@@ -41,6 +39,7 @@ namespace Pds.Contracts.FeedProcessor.Services.DependencyInjection
 
             services.Configure<AzureStorageAccountOptions>(config.GetSection(nameof(AzureStorageAccountOptions)));
             services.Configure<SchemaValidationSettings>(config.GetSection(nameof(SchemaValidationSettings)));
+            services.Configure<AzureStorageAccountOptions>(config.GetSection(nameof(AzureStorageAccountOptions)));
 
             if (CloudStorageAccount.TryParse(storageSettings.ConnectionString, out var cloudStorageAccount))
             {
@@ -49,6 +48,7 @@ namespace Pds.Contracts.FeedProcessor.Services.DependencyInjection
             }
 
             services.AddScoped<IFeedProcessor, Implementations.FeedProcessor>();
+            services.AddScoped<IContractEventSessionQueuePopulator, ContractEventSessionQueuePopulator>();
             services.AddScoped<IContractEventProcessor, ContractEventProcessor>();
             services.AddScoped<IFeedProcessorConfiguration, FeedProcessorConfiguration>();
             services.AddScoped<IConfigReader, AzureTableStorageConfigReader>();

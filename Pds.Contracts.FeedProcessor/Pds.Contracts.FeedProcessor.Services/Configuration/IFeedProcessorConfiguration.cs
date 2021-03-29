@@ -59,5 +59,11 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration
         /// <param name="settings">The configuration to save.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         Task SetValidationServiceFundingTypes(ValidationServiceConfigurationFundingTypes settings);
+
+        /// <summary>
+        /// Gets the number of pages to process.
+        /// </summary>
+        /// <returns>A <see cref="Task{int}"/> representing the asynchronous operation with number of pages that should be processed in this run.</returns>
+        Task<int> GetNumberOfPagesToProcess();
     }
 }

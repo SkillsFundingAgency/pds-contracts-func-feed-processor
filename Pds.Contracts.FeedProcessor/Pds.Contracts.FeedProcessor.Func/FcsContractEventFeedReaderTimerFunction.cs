@@ -32,15 +32,15 @@ namespace Pds.Contracts.FeedProcessor.Func
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         [FunctionName(nameof(FcsContractEventFeedReaderTimerFunction))]
         public async Task RunAsync(
-            [TimerTrigger("0 0 0 0 0 100")] TimerInfo timer,
-            [ServiceBus("%ContractEventsSessionQueue%", Connection = "ServiceBusConnection")] ICollector<Message> queueOutput,
+            [TimerTrigger("%TimerInterval%")] TimerInfo timer,
+            [ServiceBus("%ContractEventsSessionQueue%", Connection = "ServiceBusConnection")] IAsyncCollector<Message> queueOutput,
             ILogger log)
         {
-            log.LogInformation($"C# Timer trigger function {nameof(FcsContractEventFeedReaderTimerFunction)} executed at: {DateTime.Now}");
+            log?.LogInformation($"C# Timer trigger function {nameof(FcsContractEventFeedReaderTimerFunction)} executed at: {DateTime.Now}");
 
             await _feedProcessor.ExtractAndPopulateQueueAsync(queueOutput);
 
-            log.LogInformation($"C# Timer trigger function {nameof(FcsContractEventFeedReaderTimerFunction)} Completed at: {DateTime.Now}");
+            log?.LogInformation($"C# Timer trigger function {nameof(FcsContractEventFeedReaderTimerFunction)} Completed at: {DateTime.Now}");
         }
     }
 }

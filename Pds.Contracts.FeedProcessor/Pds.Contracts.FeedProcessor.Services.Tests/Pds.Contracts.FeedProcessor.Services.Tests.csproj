@@ -16,10 +16,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Pds.Core.CodeAnalysis.StyleCop" Version="2.0.0" />
+    <PackageReference Include="RichardSzalay.MockHttp" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Pds.Contracts.FeedProcessor.Func\Pds.Contracts.FeedProcessor.Func.csproj" />
     <ProjectReference Include="..\Pds.Contracts.FeedProcessor.Services\Pds.Contracts.FeedProcessor.Services.csproj" />
   </ItemGroup>
 
