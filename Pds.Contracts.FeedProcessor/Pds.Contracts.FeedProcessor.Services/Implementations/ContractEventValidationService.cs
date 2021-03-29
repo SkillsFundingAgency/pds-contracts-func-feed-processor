@@ -84,7 +84,6 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             return false;
         }
 
-
         /// <inheritdoc/>
         public bool ValidateXmlWithSchema(string contents)
         {
@@ -106,13 +105,28 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 settings.ValidationType = ValidationType.Schema;
 
                 using var sr = new StringReader(contents);
-                XmlReader reader = XmlReader.Create(sr, settings);
                 XmlDocument xmlDocument = new XmlDocument();
+
+                XmlReader reader = XmlReader.Create(sr, settings);
                 xmlDocument.Load(reader);
+            }
+            catch (XmlSchemaValidationException xsv)
+            {
+                if (_options.EnableSchemaVersionValidation == false && xsv.Message == "The required attribute 'schemaVersion' is missing.")
+                {
+                    // Mock feed does not support the schemaVersion attribute
+                    // surpress schema version validatione error
+                    _logger.LogWarning(xsv, $"[{nameof(ValidateXmlWithSchema)}] schema version element is missing but the error has been surpressed.");
+                }
+                else
+                {
+                    _logger.LogError(xsv, "One or more errors occurred during schema validation.");
+                    throw;
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Schema validation failed.");
+                _logger.LogError(ex, "One or more errors occurred during schema validation.");
                 throw;
             }
 

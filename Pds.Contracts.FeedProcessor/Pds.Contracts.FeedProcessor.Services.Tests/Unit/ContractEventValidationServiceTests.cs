@@ -18,8 +18,9 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
     [TestClass, TestCategory("Unit")]
     public class ContractEventValidationServiceTests
     {
-        private const string _validXmlDocument = "EDSK-3417-v3-Valid.xml";
-        private const string _invalidSchemaXmlDocument = "EDSK-3417-v3-Invalid-SchemaNumber.xml";
+        private const string _validXmlDocument = "EDSK-9999-v1-Valid.xml";
+        private const string _invalidSchemaXmlDocument = "EDSK-9999-v1-Invalid-SchemaNumber.xml";
+        private const string _validXmlDocumentWithoutSchemaVersion = "EDSK-9999-v1-Valid-NoSchemaVersion.xml";
         private const string _partialXmlDocument = "ESIF-9999-v5-Partial.xml";
 
         private readonly SchemaValidationSettings _validationSettings = new SchemaValidationSettings();
@@ -35,6 +36,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         {
             _validationSettings.SchemaVersion = "11_03";
             _validationSettings.SchemaManifestFilename = "contract_corporate_schema_v11.03.xsd";
+            _validationSettings.EnableSchemaVersionValidation = true;
         }
 
         #region Constructor
@@ -99,6 +101,27 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         }
 
         [TestMethod, Ignore("Awaiting XML File.")]
+        public void ValidateXmlWithSchema_WhenSchemaVersionValidationIsDiabled_FileWithoutSchemaVersionPasses()
+        {
+            // Arrange
+            _validationSettings.EnableSchemaVersionValidation = false;
+            var filename = Path.Combine(_baseDirectory, _validXmlDocumentWithoutSchemaVersion);
+            var fileContents = File.ReadAllText(filename);
+
+            ILoggerAdapter_Setup_LogInformation();
+            ILoggerAdapter_Setup_LogWarningException();
+
+            var service = GetValidationService();
+
+            // Act
+            var result = service.ValidateXmlWithSchema(fileContents);
+
+            // Assert
+            result.Should().BeTrue("Because the schema version validation is turned off.");
+            Verify_All();
+        }
+
+        [TestMethod, Ignore("Awaiting XML File.")]
         public void ValidateXMLWithSchema_ValidXML_ConformsToCurrentSchema()
         {
             // Arrange
@@ -114,28 +137,6 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
             // Assert
             act.Should().NotThrow("Because the xml is valid with the current schema.");
-            Verify_All();
-        }
-
-        [TestMethod, Ignore("Awaiting XML File")]
-        public void ValidateXMLWithSchema_SchemaFileNotFound_RaisesError()
-        {
-            // Arrange
-            var filename = Path.Combine(_baseDirectory, _validXmlDocument);
-            var fileContents = File.ReadAllText(filename);
-
-            ILoggerAdapter_Setup_LogInformation();
-            ILoggerAdapter_Setup_LogErrorException();
-
-            _validationSettings.SchemaVersion = "11_03";
-
-            var service = GetValidationService();
-
-            // Act
-            Action act = () => service.ValidateXmlWithSchema(fileContents);
-
-            // Assert
-            act.Should().Throw<FileNotFoundException>("Because the schema file does not exist.");
             Verify_All();
         }
 

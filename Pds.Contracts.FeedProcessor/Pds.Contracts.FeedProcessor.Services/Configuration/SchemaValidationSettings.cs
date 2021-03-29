@@ -14,5 +14,10 @@
         /// Gets or sets the name of the manifest file where the current schema is located.
         /// </summary>
         public string SchemaManifestFilename { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether schema version validation is enabled or disabled.
+        /// </summary>
+        public bool EnableSchemaVersionValidation { get; set; } = false;
     }
 }
