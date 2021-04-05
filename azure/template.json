@@ -271,31 +271,31 @@
               },
 
               {
-                "name": "AuditApiClientConfiguration:ApiBaseAddress",
+                "name": "AuditApiConfiguration:ApiBaseAddress",
                 "value": "[parameters('AuditApiBaseAddress')]"
               },
               {
-                "name": "AuditApiClientConfiguration:Authority",
+                "name": "AuditApiConfiguration:Authority",
                 "value": "https://login.microsoftonline.com/"
               },
               {
-                "name": "AuditApiClientConfiguration:TenantId",
+                "name": "AuditApiConfiguration:TenantId",
                 "value": "[parameters('AuditApiAzureAdTenant')]"
               },
               {
-                "name": "AuditApiClientConfiguration:ClientId",
+                "name": "AuditApiConfiguration:ClientId",
                 "value": "[parameters('AuditApiAzureAdClientId')]"
               },
               {
-                "name": "AuditApiClientConfiguration:ClientSecret",
+                "name": "AuditApiConfiguration:ClientSecret",
                 "value": "[parameters('AuditApiAzureAdClientSecret')]"
               },
               {
-                "name": "AuditApiClientConfiguration:AppUri",
+                "name": "AuditApiConfiguration:AppUri",
                 "value": "[parameters('AuditApiAzureAdAppUri')]"
               },
               {
-                "name": "AuditApiClientConfiguration:ShouldSkipAuthentication",
+                "name": "AuditApiConfiguration:ShouldSkipAuthentication",
                 "value": "false"
               },
               {
