@@ -229,12 +229,16 @@
                 "value": "*/30 * * * * *"
               },
               {
-                "name": "ValidationServiceSettings:SchemaVersion",
+                "name": "SchemaValidationSettings:SchemaVersion",
                 "value": "11_03"
               },
               {
-                "name": "ValidationServiceSettings:SchemaManifestFilename",
+                "name": "SchemaValidationSettings:SchemaManifestFilename",
                 "value": "contract_corporate_schema_v11.03.xsd"
+              },
+              {
+                "name": "SchemaValidationSettings:EnableSchemaVersionValidation",
+                "value": "false"
               },
               {
                 "name": "AzureStorageAccountOptions:ConnectionString",
