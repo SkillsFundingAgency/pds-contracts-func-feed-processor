@@ -87,6 +87,10 @@
     },
     "AuditApiAzureAdAppUri": {
       "type": "string"
+    },
+    "EnableSchemaVersionValidation": {
+      "type": "string",
+      "defaultValue": "false"
     }
   },
   "variables": {
@@ -238,7 +242,7 @@
               },
               {
                 "name": "SchemaValidationSettings:EnableSchemaVersionValidation",
-                "value": "false"
+                "value": "[parameters('EnableSchemaVersionValidation')]"
               },
               {
                 "name": "AzureStorageAccountOptions:ConnectionString",
