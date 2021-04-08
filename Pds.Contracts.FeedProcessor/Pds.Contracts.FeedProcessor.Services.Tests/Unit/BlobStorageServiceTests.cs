@@ -8,6 +8,7 @@ using Pds.Core.Logging;
 using System;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 {
@@ -25,7 +26,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         #region Upload
 
         [TestMethod]
-        public void Upload_UploadsRequestFile_As_AzureBlob()
+        public async Task UploadAsync_UploadsRequestFile_As_AzureBlob()
         {
             // Arrange
             var data = new byte[10];
@@ -34,8 +35,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             var response = Mock.Of<Azure.Response<BlobContentInfo>>();
 
             Mock.Get(_blobClient)
-                .Setup(p => p.Upload(It.IsAny<Stream>(), overwrite, It.IsAny<CancellationToken>()))
-                .Returns(response)
+                .Setup(p => p.UploadAsync(It.IsAny<Stream>(), overwrite, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response)
                 .Verifiable();
 
             SetupBlobContainerClient(_filename);
@@ -44,14 +45,14 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             var sut = GetBlobStorageService();
 
             // Act
-            sut.Upload(_filename, data, overwrite);
+            await sut.UploadAsync(_filename, data, overwrite);
 
             // Assert
             Verify_All();
         }
 
         [TestMethod]
-        public void Upload_UploadsRequestFile_As_AzureBlob_AllowsExceptionToBeRaised()
+        public void UploadAsync_UploadsRequestFile_As_AzureBlob_AllowsExceptionToBeRaised()
         {
             // Arrange
             var data = new byte[10];
@@ -59,7 +60,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             var exception = new Azure.RequestFailedException("Test message.");
 
             Mock.Get(_blobClient)
-                .Setup(p => p.Upload(It.IsAny<Stream>(), overwrite, It.IsAny<CancellationToken>()))
+                .Setup(p => p.UploadAsync(It.IsAny<Stream>(), overwrite, It.IsAny<CancellationToken>()))
                 .Throws(exception)
                 .Verifiable();
 
@@ -69,7 +70,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             var sut = GetBlobStorageService();
 
             // Act
-            Action act = () => sut.Upload(_filename, data, overwrite);
+            Func<Task> act = async () => await sut.UploadAsync(_filename, data, overwrite);
 
             // Assert
             act.Should().Throw<Azure.RequestFailedException>();

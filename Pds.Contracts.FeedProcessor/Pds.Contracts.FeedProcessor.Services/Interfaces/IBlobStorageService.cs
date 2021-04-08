@@ -1,4 +1,6 @@
-﻿namespace Pds.Contracts.FeedProcessor.Services.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace Pds.Contracts.FeedProcessor.Services.Interfaces
 {
     /// <summary>
     /// Functionality to allow files to be saved to a blob store.
@@ -12,6 +14,6 @@
         /// <param name="contents">Contents to upload.</param>
         /// <param name="overwrite">Overwrite the contents if they exists.</param>
         /// <exception cref="Azure.RequestFailedException">Raised on upload failure.</exception>
-        void Upload(string filename, byte[] contents, bool overwrite = true);
+        Task UploadAsync(string filename, byte[] contents, bool overwrite = true);
     }
 }

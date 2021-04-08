@@ -2,6 +2,7 @@
 using Pds.Contracts.FeedProcessor.Services.Interfaces;
 using Pds.Core.Logging;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace Pds.Contracts.FeedProcessor.Services.Implementations
 {
@@ -27,14 +28,14 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
         }
 
         /// <inheritdoc />
-        public void Upload(string filename, byte[] contents, bool overwrite = true)
+        public async Task UploadAsync(string filename, byte[] contents, bool overwrite = true)
         {
             _loggerAdapter.LogInformation($"Uploading file [{filename}] to storage container [{_blobContainerClient.AccountName}/{_blobContainerClient.Name}].");
             var blob = _blobContainerClient.GetBlobClient(filename);
 
             using var ms = new MemoryStream(contents);
 
-            blob.Upload(ms, overwrite);
+            await blob.UploadAsync(ms, overwrite);
 
             _loggerAdapter.LogInformation($"Upload of [{filename}] sucessful.");
         }

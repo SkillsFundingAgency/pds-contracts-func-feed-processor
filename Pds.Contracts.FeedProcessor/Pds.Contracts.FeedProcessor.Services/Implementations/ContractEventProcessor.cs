@@ -69,7 +69,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                         // Save xml to blob
                         // Filename format : [Entry.Updated]_[ContractNumber]_v[ContractVersion]_[Entry.BookmarkId].xml
                         string filename = $"{feedEntry.Updated:yyyyMMddHHmmss}_{item.ContractNumber}_v{item.ContractVersion}_{item.BookmarkId}.xml";
-                        _blobStorageService.Upload(filename, Encoding.UTF8.GetBytes(feedEntry.Content));
+                        await _blobStorageService.UploadAsync(filename, Encoding.UTF8.GetBytes(feedEntry.Content));
 
                         item.ContractEventXml = filename;
 

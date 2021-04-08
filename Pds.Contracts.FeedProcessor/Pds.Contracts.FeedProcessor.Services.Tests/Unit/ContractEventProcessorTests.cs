@@ -72,7 +72,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 .Verifiable();
 
             Mock.Get(_blobStorageService)
-                .Setup(p => p.Upload(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<bool>()))
+                .Setup(p => p.UploadAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<bool>()))
+                .Returns(Task.CompletedTask)
                 .Verifiable();
 
             var processor = GetContractEventProcessor();
@@ -139,7 +140,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 .Verifiable();
 
             Mock.Get(_blobStorageService)
-                .Setup(p => p.Upload(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<bool>()))
+                .Setup(p => p.UploadAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<bool>()))
                 .Throws(raisedException)
                 .Verifiable();
 

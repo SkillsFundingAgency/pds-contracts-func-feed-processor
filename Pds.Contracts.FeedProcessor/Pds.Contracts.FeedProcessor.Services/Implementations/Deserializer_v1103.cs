@@ -242,11 +242,6 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
 
         private ContractFundingType ParseContractFundingType(string fundingType)
         {
-            if (fundingType == string.Empty)
-            {
-                return ContractFundingType.Unknown;
-            }
-
             return fundingType.ToLower() switch
             {
                 "main" => ContractFundingType.Mainstream,
@@ -268,7 +263,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "ccf" => ContractFundingType.CollegeCollaborationFund,
                 "feca" => ContractFundingType.FurtherEducationConditionAllocation,
                 "19trn2020" => ContractFundingType.ProcuredNineteenToTwentyFourTraineeship,
-                _ => throw new InvalidOperationException($"ContractFundingType [{fundingType}] is not valid.")
+
+                _ => ContractFundingType.Unknown
             };
         }
     }

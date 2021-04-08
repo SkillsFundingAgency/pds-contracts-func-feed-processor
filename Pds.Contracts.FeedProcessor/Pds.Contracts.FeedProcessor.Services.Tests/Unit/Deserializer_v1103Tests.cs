@@ -399,6 +399,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("ccf", ContractFundingType.CollegeCollaborationFund)]
         [DataRow("feca", ContractFundingType.FurtherEducationConditionAllocation)]
         [DataRow("19trn2020", ContractFundingType.ProcuredNineteenToTwentyFourTraineeship)]
+        [DataRow("SomeOtherValue", ContractFundingType.Unknown)]
         [TestMethod]
         public async Task Deserilize_PartialXML_ValidateFundingTypeEnum_ReturnsExpectedResult(string fundingType, ContractFundingType expectedType)
         {

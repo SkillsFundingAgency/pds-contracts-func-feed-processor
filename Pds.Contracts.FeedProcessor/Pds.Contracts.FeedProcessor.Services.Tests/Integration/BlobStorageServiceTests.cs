@@ -9,6 +9,7 @@ using Pds.Contracts.FeedProcessor.Services.Tests.Helper;
 using Pds.Core.Logging;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Pds.Contracts.FeedProcessor.Services.Tests.Integration
 {
@@ -31,7 +32,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Integration
         #region Upload
 
         [TestMethod]
-        public void Upload_IntegrationTest()
+        public async Task UploadAsync_IntegrationTest()
         {
             // Arrange
             var data = Encoding.UTF8.GetBytes(_dataContents);
@@ -44,7 +45,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Integration
             var sut = GetBlobStorageService();
 
             // Act
-            sut.Upload(_filename, data, true);
+            await sut.UploadAsync(_filename, data, true);
 
             // Assert
             var actual = client.GetBlobClient(_filename);

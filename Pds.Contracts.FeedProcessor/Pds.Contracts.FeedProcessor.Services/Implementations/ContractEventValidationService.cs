@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 using Pds.Contracts.FeedProcessor.Services.Configuration;
 using Pds.Contracts.FeedProcessor.Services.Interfaces;
 using Pds.Core.Logging;
@@ -7,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Resources;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Schema;
@@ -44,6 +42,10 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             {
                 _logger.LogInformation($"[{nameof(ContractEventValidationService)}] Loading schema version 11.03.");
                 _xmlSchema = ReadSchemaFile(_options.SchemaManifestFilename);
+            }
+            else
+            {
+                _logger.LogWarning($"[{nameof(ContractEventValidationService)}] - Active schema version is missing - Schema not loaded");
             }
         }
 
@@ -107,22 +109,11 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 using var sr = new StringReader(contents);
                 XmlDocument xmlDocument = new XmlDocument();
 
-                XmlReader reader = XmlReader.Create(sr, settings);
+                //XmlReader reader = XmlReader.Create(sr, settings);
+                XmlReader reader = XmlReader.Create(sr);
                 xmlDocument.Load(reader);
-            }
-            catch (XmlSchemaValidationException xsv)
-            {
-                if (_options.EnableSchemaVersionValidation == false && xsv.Message == "The required attribute 'schemaVersion' is missing.")
-                {
-                    // Mock feed does not support the schemaVersion attribute
-                    // surpress schema version validatione error
-                    _logger.LogWarning(xsv, $"[{nameof(ValidateXmlWithSchema)}] schema version element is missing but the error has been surpressed.");
-                }
-                else
-                {
-                    _logger.LogError(xsv, "One or more errors occurred during schema validation.");
-                    throw;
-                }
+                xmlDocument.Schemas.Add(_xmlSchema);
+                xmlDocument.Validate(XmlValidationEventHandler);
             }
             catch (Exception ex)
             {
@@ -232,7 +223,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 using var stream = assembly.GetManifestResourceStream(resourceName);
                 if (stream != null)
                 {
-                    return XmlSchema.Read(stream, ValidationEventHandlerFunc);
+                    return XmlSchema.Read(stream, SchemaValidationEventHandler);
                 }
             }
             catch (Exception err)
@@ -243,10 +234,25 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             return null;
         }
 
-        private void ValidationEventHandlerFunc(object sender, ValidationEventArgs e)
+        private void SchemaValidationEventHandler(object sender, ValidationEventArgs e)
         {
             // One or more validatione errors when reading the schema file
             _logger.LogError(e.Exception, e.Message);
+        }
+
+        private void XmlValidationEventHandler(object send, ValidationEventArgs e)
+        {
+            // TODO : Are multiple expcetion raised here
+            if (_options.EnableSchemaVersionValidation == false && e.Message == "The required attribute 'schemaVersion' is missing.")
+            {
+                // Mock feed does not support the schemaVersion attribute
+                // surpress schema version validatione error
+                _logger.LogWarning(e.Exception, $"[{nameof(ValidateXmlWithSchema)}] schema version element is missing but the error has been surpressed.");
+            }
+            else
+            {
+                throw e.Exception;
+            }
         }
     }
 }

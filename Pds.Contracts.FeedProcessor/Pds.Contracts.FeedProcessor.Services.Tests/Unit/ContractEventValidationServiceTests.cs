@@ -72,6 +72,22 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             // Assert
             act.Should().NotThrow();
         }
+
+        [TestMethod]
+        public void Constructor_OnSchemaVersionMismatch_MessageIsLogged_But_ProcessDoesNotAbort()
+        {
+            // Arrange
+            _validationSettings.SchemaVersion = "11_00";
+            var options = Options.Create<SchemaValidationSettings>(_validationSettings);
+
+            ILoggerAdapter_Setup_LogWarning();
+
+            // Act
+            Action act = () => new ContractEventValidationService(_configuration, options, _logger);
+
+            // Assert
+            act.Should().NotThrow();
+        }
         #endregion
 
         #region ValidateXmlWithSchema
