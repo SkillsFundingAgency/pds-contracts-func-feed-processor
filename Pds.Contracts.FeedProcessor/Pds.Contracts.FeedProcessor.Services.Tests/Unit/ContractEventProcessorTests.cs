@@ -8,7 +8,6 @@ using Pds.Core.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
@@ -32,15 +31,14 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         {
             // Arrange
             var feed = GetFeedEntry();
-            var expected = GetZeroContractProcessResult();
-
-            var actualBackingObject = GetZeroContractProcessResult();
+            var expected = new List<ContractProcessResult>();
+            var actualBackingObject = new List<ContractProcessResult>();
 
             ILogger_Setup_LogInformation();
 
             Mock.Get(_deserilizationService)
                 .Setup(p => p.DeserializeAsync(It.IsAny<string>()))
-                .Returns(Task.FromResult(actualBackingObject))
+                .ReturnsAsync(actualBackingObject.ToList())
                 .Verifiable();
 
             var processor = GetContractEventProcessor();
@@ -58,9 +56,9 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         {
             // Arrange
             var feed = GetFeedEntry();
-            var expected = GetOneContractProcessResult();
-            expected.ContactEvents.First().BookmarkId = feed.Id;
-            expected.ContactEvents.First().ContractEventXml = GetFilename(feed, expected.ContactEvents.First());
+            var expected = GetOneContractProcessResult().ToList();
+            expected.First().ContractEvent.BookmarkId = feed.Id;
+            expected.First().ContractEvent.ContractEventXml = GetFilename(feed, expected.First().ContractEvent);
 
             var actualBackingObject = GetOneContractProcessResult();
 
@@ -68,12 +66,45 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
             Mock.Get(_deserilizationService)
                 .Setup(p => p.DeserializeAsync(It.IsAny<string>()))
-                .Returns(Task.FromResult(actualBackingObject))
+                .ReturnsAsync(actualBackingObject.ToList())
                 .Verifiable();
 
             Mock.Get(_blobStorageService)
                 .Setup(p => p.UploadAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<bool>()))
                 .Returns(Task.CompletedTask)
+                .Verifiable();
+
+            var processor = GetContractEventProcessor();
+
+            // Act
+            var result = await processor.ProcessEventsAsync(feed);
+
+            // Assert
+            result.Should().BeEquivalentTo(expected);
+            Verify_All();
+        }
+
+        [DataRow(ContractProcessResultType.FundingTypeValidationFailed)]
+        [DataRow(ContractProcessResultType.OperationFailed)]
+        [DataRow(ContractProcessResultType.StatusValidationFailed)]
+        [TestMethod]
+        public async Task ProcessEventsAsync_FailedContract_DoesNotSaveToAzure(ContractProcessResultType resultType)
+        {
+            // Arrange
+            var feed = GetFeedEntry();
+            var expected = GetOneContractProcessResult().ToList();
+            expected.First().ContractEvent.BookmarkId = feed.Id;
+            expected.First().Result = resultType;
+
+            var actualBackingObject = GetOneContractProcessResult().ToList();
+            actualBackingObject.First().Result = resultType;
+
+            ILogger_Setup_LogInformation();
+            ILogger_Setup_LogWarning();
+
+            Mock.Get(_deserilizationService)
+                .Setup(p => p.DeserializeAsync(It.IsAny<string>()))
+                .ReturnsAsync(actualBackingObject)
                 .Verifiable();
 
             var processor = GetContractEventProcessor();
@@ -124,8 +155,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             // Arrange
             var feed = GetFeedEntry();
             var expected = GetOneContractProcessResult();
-            expected.ContactEvents.First().BookmarkId = feed.Id;
-            expected.ContactEvents.First().ContractEventXml = GetFilename(feed, expected.ContactEvents.First());
+            expected.First().ContractEvent.BookmarkId = feed.Id;
+            expected.First().ContractEvent.ContractEventXml = GetFilename(feed, expected.First().ContractEvent);
 
             var actualBackingObject = GetOneContractProcessResult();
 
@@ -136,7 +167,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
             Mock.Get(_deserilizationService)
                 .Setup(p => p.DeserializeAsync(It.IsAny<string>()))
-                .Returns(Task.FromResult(actualBackingObject))
+                .ReturnsAsync(actualBackingObject.ToList())
                 .Verifiable();
 
             Mock.Get(_blobStorageService)
@@ -156,14 +187,12 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Verify_All();
         }
 
-        #endregion
-
+        #endregion ProcessEventsAsync
 
         #region Arrange Helpers
 
         private ContractEventProcessor GetContractEventProcessor()
         => new ContractEventProcessor(_deserilizationService, _blobStorageService, _loggerAdapter);
-
 
         private FeedEntry GetFeedEntry()
         {
@@ -175,28 +204,16 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             };
         }
 
-        private ContractProcessResult GetZeroContractProcessResult()
+        private IEnumerable<ContractProcessResult> GetOneContractProcessResult()
         {
-            return new ContractProcessResult()
+            yield return new ContractProcessResult()
             {
-                ContactEvents = new List<ContractEvent>(),
-                Result = ContractProcessResultType.Successful
-            };
-        }
-
-        private ContractProcessResult GetOneContractProcessResult()
-        {
-            return new ContractProcessResult()
-            {
-                ContactEvents = new List<ContractEvent>()
+                ContractEvent = new ContractEvent()
                 {
-                    new ContractEvent()
-                    {
-                        BookmarkId = Guid.Empty,
-                        ParentContractNumber = "ParentTest123",
-                        ContractNumber = "Test456",
-                        ContractVersion = 789
-                    }
+                    BookmarkId = Guid.Empty,
+                    ParentContractNumber = "ParentTest123",
+                    ContractNumber = "Test456",
+                    ContractVersion = 789
                 },
                 Result = ContractProcessResultType.Successful
             };
@@ -206,6 +223,13 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         {
             Mock.Get(_loggerAdapter)
                 .Setup(p => p.LogInformation(It.IsAny<string>(), It.IsAny<object[]>()))
+                .Verifiable();
+        }
+
+        private void ILogger_Setup_LogWarning()
+        {
+            Mock.Get(_loggerAdapter)
+                .Setup(p => p.LogWarning(It.IsAny<string>(), It.IsAny<object[]>()))
                 .Verifiable();
         }
 
@@ -223,7 +247,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             return filename;
         }
 
-        #endregion
+        #endregion Arrange Helpers
 
         #region Verify
 
@@ -238,6 +262,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Mock.Get(_loggerAdapter)
                 .VerifyAll();
         }
-        #endregion
+
+        #endregion Verify
     }
 }

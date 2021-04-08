@@ -79,8 +79,6 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 .Throws<XmlSchemaValidationException>()
                 .Verifiable();
 
-            var expected = GeneratePOCOForEDSK3417();
-
             var sut = GetDeserializer();
 
             // Act
@@ -110,7 +108,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 .Returns(Task.FromResult(false));
 
             var expected = GeneratePocoForESIF9999();
-            expected.Result = ContractProcessResultType.StatusValidationFailed;
+            expected.First().Result = ContractProcessResultType.StatusValidationFailed;
 
             var sut = GetDeserializer();
 
@@ -139,7 +137,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 .Returns(Task.FromResult(false));
 
             var expected = GeneratePocoForESIF9999();
-            expected.Result = ContractProcessResultType.FundingTypeValidationFailed;
+            expected.First().Result = ContractProcessResultType.FundingTypeValidationFailed;
 
             var sut = GetDeserializer();
 
@@ -272,7 +270,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             IContractValidationService_Setup_ValidateXmlWithSchema();
 
             var expected = GeneratePocoForESIF9999();
-            expected.ContactEvents.First().StartDate = null;
+            expected.First().ContractEvent.StartDate = null;
 
             var sut = GetDeserializer();
 
@@ -305,7 +303,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             IContractValidationService_Setup_ValidateXmlWithSchema();
 
             var expected = GeneratePocoForESIF9999();
-            expected.ContactEvents.First().EndDate = null;
+            expected.First().ContractEvent.EndDate = null;
 
             var sut = GetDeserializer();
 
@@ -338,7 +336,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             IContractValidationService_Setup_ValidateXmlWithSchema();
 
             var expected = GeneratePocoForESIF9999();
-            expected.ContactEvents.First().SignedOn = null;
+            expected.First().ContractEvent.SignedOn = null;
 
             var sut = GetDeserializer();
 
@@ -421,7 +419,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             IContractValidationService_Setup_ValidateXmlWithSchema();
 
             var expected = GeneratePocoForESIF9999();
-            expected.ContactEvents.First().FundingType = expectedType;
+            expected.First().ContractEvent.FundingType = expectedType;
 
             var sut = GetDeserializer();
 
@@ -458,7 +456,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             IContractValidationService_Setup_ValidateXmlWithSchema();
 
             var expected = GeneratePocoForESIF9999();
-            expected.ContactEvents.First().ParentStatus = expectedParentStatus;
+            expected.First().ContractEvent.ParentStatus = expectedParentStatus;
 
             var sut = GetDeserializer();
 
@@ -503,7 +501,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             IContractValidationService_Setup_ValidateXmlWithSchema();
 
             var expected = GeneratePocoForESIF9999();
-            expected.ContactEvents.First().Status = expectedStatus;
+            expected.First().ContractEvent.Status = expectedStatus;
 
             var sut = GetDeserializer();
 
@@ -539,7 +537,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             IContractValidationService_Setup_ValidateXmlWithSchema();
 
             var expected = GeneratePocoForESIF9999();
-            expected.ContactEvents.First().AmendmentType = expectedAmendment;
+            expected.First().ContractEvent.AmendmentType = expectedAmendment;
 
             var sut = GetDeserializer();
 
@@ -557,65 +555,69 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
         #region Arrange Helpers
 
+        /// <summary>
+        /// Generates the poco for eds K341.
+        /// </summary>
+        /// <returns>Returns a dummy <see cref="ContractProcessResult"/>.</returns>
+        /// <remarks>
+        /// TODO: This method is not used yet, but will be in the next PR.
+        /// </remarks>
         private static ContractProcessResult GeneratePOCOForEDSK3417()
         {
             // Contract Event matching the data from the XML file.
             return new ContractProcessResult()
             {
-                ContactEvents = new List<ContractEvent>()
+                ContractEvent = new ContractEvent()
                 {
-                    new ContractEvent()
+                    AmendmentType = ContractAmendmentType.Notification,
+                    ContractAllocations = new List<ContractAllocation>()
                     {
-                        AmendmentType = ContractAmendmentType.Notification,
-                        ContractAllocations = new List<ContractAllocation>()
+                        new ContractAllocation()
                         {
-                            new ContractAllocation()
-                            {
-                                ContractAllocationNumber = "16TR-1565",
-                                FundingStreamPeriodCode = "16-18TRN2021",
-                                LEPArea = null,
-                                TenderSpecTitle = null
-                            },
-                            new ContractAllocation()
-                            {
-                                ContractAllocationNumber = "AECS-1252",
-                                FundingStreamPeriodCode = "AEBC-CSO2021",
-                                LEPArea = null,
-                                TenderSpecTitle = null
-                            },
-                            new ContractAllocation()
-                            {
-                                ContractAllocationNumber = "AECT-1190",
-                                FundingStreamPeriodCode = "AEBC-19TRN2021",
-                                LEPArea = null,
-                                TenderSpecTitle = null
-                            }
+                            ContractAllocationNumber = "16TR-1565",
+                            FundingStreamPeriodCode = "16-18TRN2021",
+                            LEPArea = null,
+                            TenderSpecTitle = null
                         },
-                        ContractEventXml = null,
-                        ContractNumber = "EDSK-3417",
-                        ContractPeriodValue = "2021",
-                        ContractVersion = 3,
-                        EndDate = new DateTime(2021, 7, 31),
-                        FundingType = ContractFundingType.EducationAndSkillsFunding,
-                        ParentContractNumber = "ESFA-20219",
-                        ParentStatus = ContractParentStatus.Draft,
-                        StartDate = new DateTime(2020, 8, 1),
-                        Status = ContractStatus.PublishedToProvider,
-                        Type = "Conditions of Funding (Grant) (Trust)",
-                        UKPRN = 10038183,
-                        Value = 206967m
-                    }
+                        new ContractAllocation()
+                        {
+                            ContractAllocationNumber = "AECS-1252",
+                            FundingStreamPeriodCode = "AEBC-CSO2021",
+                            LEPArea = null,
+                            TenderSpecTitle = null
+                        },
+                        new ContractAllocation()
+                        {
+                            ContractAllocationNumber = "AECT-1190",
+                            FundingStreamPeriodCode = "AEBC-19TRN2021",
+                            LEPArea = null,
+                            TenderSpecTitle = null
+                        }
+                    },
+                    ContractEventXml = null,
+                    ContractNumber = "EDSK-3417",
+                    ContractPeriodValue = "2021",
+                    ContractVersion = 3,
+                    EndDate = new DateTime(2021, 7, 31),
+                    FundingType = ContractFundingType.EducationAndSkillsFunding,
+                    ParentContractNumber = "ESFA-20219",
+                    ParentStatus = ContractParentStatus.Draft,
+                    StartDate = new DateTime(2020, 8, 1),
+                    Status = ContractStatus.PublishedToProvider,
+                    Type = "Conditions of Funding (Grant) (Trust)",
+                    UKPRN = 10038183,
+                    Value = 206967m
                 },
                 Result = ContractProcessResultType.Successful
             };
         }
 
-        private static ContractProcessResult GeneratePocoForESIF9999()
-        => new ContractProcessResult()
+        private static IList<ContractProcessResult> GeneratePocoForESIF9999()
+        => new List<ContractProcessResult>
         {
-            ContactEvents = new List<ContractEvent>()
+            new ContractProcessResult
             {
-                new ContractEvent()
+                ContractEvent = new ContractEvent()
                 {
                     AmendmentType = ContractAmendmentType.Variation,
                     BookmarkId = Guid.Empty,
@@ -643,9 +645,9 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                     Type = "Contract for Services",
                     UKPRN = 10000001,
                     Value = 9099922.0000m
-                }
-            },
-            Result = ContractProcessResultType.Successful
+                },
+                Result = ContractProcessResultType.Successful
+            }
         };
 
         private Deserializer_v1103 GetDeserializer()

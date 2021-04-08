@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Pds.Contracts.FeedProcessor.Services.Interfaces
 {
@@ -10,10 +11,10 @@ namespace Pds.Contracts.FeedProcessor.Services.Interfaces
         where T : class
     {
         /// <summary>
-        /// Deserialises the given XML string to an instance of <typeparamref name="T"/>.
+        /// Deserialises the given XML string to a list containing instances of <typeparamref name="T"/>.
         /// </summary>
         /// <param name="xml">Xml to deserilise.</param>
         /// <returns>Object with the contents from xml.</returns>
-        Task<T> DeserializeAsync(string xml);
+        Task<IList<T>> DeserializeAsync(string xml);
     }
 }

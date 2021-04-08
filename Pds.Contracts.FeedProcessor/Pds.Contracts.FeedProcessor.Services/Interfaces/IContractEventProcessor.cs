@@ -1,4 +1,5 @@
 ﻿using Pds.Contracts.FeedProcessor.Services.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Pds.Contracts.FeedProcessor.Services.Interfaces
@@ -13,6 +14,6 @@ namespace Pds.Contracts.FeedProcessor.Services.Interfaces
         /// </summary>
         /// <param name="feedEntry">The entry to process.</param>
         /// <returns>The processed and verified feed contents as a <see cref="ContractProcessResult"/>.</returns>
-        Task<ContractProcessResult> ProcessEventsAsync(FeedEntry feedEntry);
+        Task<IList<ContractProcessResult>> ProcessEventsAsync(FeedEntry feedEntry);
     }
 }

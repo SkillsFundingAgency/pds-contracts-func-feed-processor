@@ -56,7 +56,9 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 var newEntries = selfPage.Entries.Skip(selfPage.Entries.IndexOf(lastBookmark) + 1);
 
                 _logger.LogInformation($"{nameof(ExtractAndPopulateQueueAsync)} - On [Self page] found [{newEntries.Count()}] new contract events to process.");
+
                 await _queuePopulator.PopulateSessionQueue(queue, newEntries);
+                await _configuration.SetLastReadPage(selfPage.CurrentPageNumber);
             }
             else
             {
@@ -76,20 +78,22 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
         {
             // Go to last read page.
             var thisPage = await _fcsFeedReader.ReadPageAsync(lastReadPage);
-            if (!thisPage.Entries.Any(e => e.Id == lastReadBookmarkEntry))
+            if (lastReadBookmarkEntry != Guid.Empty && !thisPage.Entries.Any(e => e.Id == lastReadBookmarkEntry))
             {
                 throw new InvalidOperationException($"{nameof(ExtractAndPopulateQueueAsync)} - Last read bookmark [{lastReadBookmarkEntry}] cannot be found on last read page [{lastReadPage}] abort processing contract events.");
             }
 
             // extract all entries after last read bookmark.
-            var lastBookmark = thisPage.Entries.Single(e => e.Id == lastReadBookmarkEntry);
-            var newEntries = thisPage.Entries.Skip(thisPage.Entries.IndexOf(lastBookmark) + 1);
+            var lastBookmark = thisPage.Entries.SingleOrDefault(e => e.Id == lastReadBookmarkEntry);
+            var newEntries = lastBookmark is null ? thisPage.Entries : thisPage.Entries.Skip(thisPage.Entries.IndexOf(lastBookmark) + 1);
 
             _logger.LogInformation($"{nameof(ExtractAndPopulateQueueAsync)} - On [{lastReadPage}] found [{newEntries.Count()}] new contract events to process.");
+
             if (newEntries.Any())
             {
                 numberOfPagesToProcess--;
                 await _queuePopulator.PopulateSessionQueue(queue, newEntries);
+                await _configuration.SetLastReadPage(thisPage.CurrentPageNumber);
             }
 
             while (numberOfPagesToProcess > 0 && !thisPage.IsSelfPage)

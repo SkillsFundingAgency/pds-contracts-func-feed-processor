@@ -49,6 +49,9 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations.Tests
             };
 
             SetupMocks(dummyLastReadBookmarkId, dummyFeedPage);
+            Mock.Get(_mockFeedProcessorConfiguration)
+                .Setup(c => c.SetLastReadPage(It.IsAny<int>()))
+                .Returns(Task.CompletedTask);
 
             // Act
             var feedProcessor = new FeedProcessor(_mockFeedReader, _mockQueuePopulator, _mockFeedProcessorConfiguration, _mockLogger);

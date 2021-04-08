@@ -2,6 +2,8 @@
 using Pds.Contracts.FeedProcessor.Services.Models;
 using Pds.Core.Logging;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,7 +39,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
         /// <exception cref="ArgumentNullException">Raised if <paramref name="feedEntry"/> is null.</exception>
         /// <exception cref="ArgumentException">Raised if the content property of <param name="feedEntry"/> is null or empty.</exception>
         /// <exception cref="Azure.RequestFailedException">Raised if the XML contents cannot be saved to azure storage.</exception>
-        public async Task<ContractProcessResult> ProcessEventsAsync(FeedEntry feedEntry)
+        public async Task<IList<ContractProcessResult>> ProcessEventsAsync(FeedEntry feedEntry)
         {
             if (feedEntry is null)
             {
@@ -49,41 +51,48 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 throw new ArgumentException(nameof(feedEntry));
             }
 
-            _loggerAdapter.LogInformation($"[{nameof(ProcessEventsAsync)}] - Parsing xml string to object.");
+            _loggerAdapter.LogInformation($"[{nameof(ProcessEventsAsync)}] - [Bookmark:{feedEntry.Id}] - Parsing xml string to object.");
 
             // XML is compatiable with the schema, so, it should deserialise.
-            var result = await _deserilizationService.DeserializeAsync(feedEntry.Content);
+            var contractEvents = await _deserilizationService.DeserializeAsync(feedEntry.Content);
+            var resultsGroup = contractEvents
+                .GroupBy(c => c.Result)
+                .Select(g => $"{g.Key}:{g.Count()}");
 
-            _loggerAdapter.LogInformation($"[{nameof(ProcessEventsAsync)}] - XML parsing completed - Result : {result.Result}.");
+            _loggerAdapter.LogInformation($"[{nameof(ProcessEventsAsync)}] - [Bookmark:{feedEntry.Id}] - XML parsing completed with results [{string.Join(",", resultsGroup)}].");
 
-            if (result.Result == ContractProcessResultType.Successful)
+            try
             {
-                try
+                foreach (var item in contractEvents)
                 {
-                    foreach (var item in result.ContactEvents)
-                    {
-                        item.BookmarkId = feedEntry.Id;
+                    item.ContractEvent.BookmarkId = feedEntry.Id;
 
-                        _loggerAdapter.LogInformation($"[{nameof(ProcessEventsAsync)}] - Saving XML to azure strorage.");
+                    if (item.Result == ContractProcessResultType.Successful)
+                    {
+                        _loggerAdapter.LogInformation($"[{nameof(ProcessEventsAsync)}] - [Bookmark:{feedEntry.Id}] - Saving XML to azure strorage.");
 
                         // Save xml to blob
                         // Filename format : [Entry.Updated]_[ContractNumber]_v[ContractVersion]_[Entry.BookmarkId].xml
-                        string filename = $"{feedEntry.Updated:yyyyMMddHHmmss}_{item.ContractNumber}_v{item.ContractVersion}_{item.BookmarkId}.xml";
+                        string filename = $"{feedEntry.Updated:yyyyMMddHHmmss}_{item.ContractEvent.ContractNumber}_v{item.ContractEvent.ContractVersion}_{item.ContractEvent.BookmarkId}.xml";
                         await _blobStorageService.UploadAsync(filename, Encoding.UTF8.GetBytes(feedEntry.Content));
 
-                        item.ContractEventXml = filename;
+                        item.ContractEvent.ContractEventXml = filename;
 
-                        _loggerAdapter.LogInformation($"[{nameof(ProcessEventsAsync)}] - Saving XML completed.");
+                        _loggerAdapter.LogInformation($"[{nameof(ProcessEventsAsync)}] - [Bookmark:{feedEntry.Id}] - Saving XML completed.");
+                    }
+                    else
+                    {
+                        _loggerAdapter.LogWarning($"[{nameof(ProcessEventsAsync)}] - [Bookmark:{feedEntry.Id}] - Ignoring filesave - Result is unsuccessful [{item.Result}].");
                     }
                 }
-                catch (Exception ex)
-                {
-                    _loggerAdapter.LogError(ex, "Failed to save XML file.");
-                    throw;
-                }
+            }
+            catch (Exception ex)
+            {
+                _loggerAdapter.LogError(ex, $"Failed to save XML file for Bookmark [{feedEntry.Id}].");
+                throw;
             }
 
-            return result;
+            return contractEvents;
         }
     }
 }

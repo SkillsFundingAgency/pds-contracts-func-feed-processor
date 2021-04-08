@@ -16,6 +16,6 @@ namespace Pds.Contracts.FeedProcessor.Services.Models
         /// Gets or sets the contact event.
         /// Value may be null if result was unsucessful.
         /// </summary>
-        public IEnumerable<ContractEvent> ContactEvents { get; set; }
+        public ContractEvent ContractEvent { get; set; }
     }
 }

@@ -109,7 +109,6 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 using var sr = new StringReader(contents);
                 XmlDocument xmlDocument = new XmlDocument();
 
-                //XmlReader reader = XmlReader.Create(sr, settings);
                 XmlReader reader = XmlReader.Create(sr);
                 xmlDocument.Load(reader);
                 xmlDocument.Schemas.Add(_xmlSchema);
@@ -242,7 +241,6 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
 
         private void XmlValidationEventHandler(object send, ValidationEventArgs e)
         {
-            // TODO : Are multiple expcetion raised here
             if (_options.EnableSchemaVersionValidation == false && e.Message == "The required attribute 'schemaVersion' is missing.")
             {
                 // Mock feed does not support the schemaVersion attribute

@@ -43,17 +43,17 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 var resultTypes = new List<ContractProcessResultType>();
                 foreach (var item in newEntries)
                 {
-                    var result = await _eventProcessor.ProcessEventsAsync(item);
-                    foreach (var contractEvent in result.ContactEvents)
+                    var results = await _eventProcessor.ProcessEventsAsync(item);
+                    foreach (var resultItem in results)
                     {
-                        resultTypes.Add(result.Result);
-                        switch (result.Result)
+                        resultTypes.Add(resultItem.Result);
+                        switch (resultItem.Result)
                         {
                             case ContractProcessResultType.Successful:
                                 await queue.AddAsync(new Message
                                 {
-                                    SessionId = contractEvent.ContractNumber,
-                                    Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(contractEvent))
+                                    SessionId = resultItem.ContractEvent.ContractNumber,
+                                    Body = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(resultItem.ContractEvent))
                                 });
                                 break;
 

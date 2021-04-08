@@ -1,4 +1,5 @@
 ﻿using Pds.Audit.Api.Client.Interfaces;
+using Pds.Contracts.FeedProcessor.Services.Extensions;
 using Pds.Contracts.FeedProcessor.Services.Interfaces;
 using Pds.Contracts.FeedProcessor.Services.Models;
 using Pds.Core.Logging;
@@ -42,11 +43,11 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
         }
 
         /// <inheritdoc/>
-        public async Task<ContractProcessResult> DeserializeAsync(string xml)
+        public async Task<IList<ContractProcessResult>> DeserializeAsync(string xml)
         {
-            var rtn = new ContractProcessResult() { Result = ContractProcessResultType.OperationFailed };
-
             _loggerAdapter.LogInformation($"[{nameof(Deserializer_v1103)}.{nameof(DeserializeAsync)}] - Called to deserilise xml string.");
+
+            var contractList = new List<ContractProcessResult>();
 
             // Ensure xml is valid.
             _validationService.ValidateXmlWithSchema(xml);
@@ -59,125 +60,86 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
 
             // The content element may be in either case.
             var details = (document["content"] ?? document["Content"])["contract"];
-
-            var contractList = new List<ContractEvent>();
-
-            var contracts = details.SelectNodes("c:contracts/c:contract", ns);
-            foreach (XmlElement contract in contracts)
+            var feedContracts = details.SelectNodesIgnoreCase("c:contracts/c:contract", ns);
+            foreach (XmlElement feedContract in feedContracts)
             {
-                var contractStatus = contract.SelectSingleNode("c:contractStatus/c:status", ns).InnerText;
-                var parentStatus = contract.SelectSingleNode("c:contractStatus/c:parentStatus", ns).InnerText;
+                var evt = DeserializeContractEvent(feedContract, ns);
 
-                var amendmentType = contract.SelectSingleNode("c:amendmentType", ns)?.InnerText ?? "None";
-                var fundingType = contract.SelectSingleNode("c:fundingType/c:fundingTypeCode", ns).InnerText;
-
-                ContractEvent evt = DeserializeContractEvent(contract, ns);
-
-                // Validate statuses
-                if (await _validationService.ValidateContractStatusAsync(parentStatus, contractStatus, amendmentType) == false)
+                contractList.Add(new ContractProcessResult
                 {
-                    rtn.Result = ContractProcessResultType.StatusValidationFailed;
-
-                    string msg = $"Contract event for Contract [{evt.ContractNumber}] Version [{evt.ContractVersion}] with parent status [{parentStatus}], status [{contractStatus}], and amendment type [{amendmentType}] has been ignored.";
-                    _loggerAdapter.LogWarning(msg);
-                    await _auditService.TrySendAuditAsync(new Audit.Api.Client.Models.Audit()
-                    {
-                        Action = Audit.Api.Client.Enumerations.ActionType.ContractFeedEventFilteredOut,
-                        Message = msg,
-                        Severity = Audit.Api.Client.Enumerations.SeverityLevel.Information,
-                        Ukprn = evt.UKPRN,
-                        User = _auditApiUser
-                    });
-                }
-                else if (await _validationService.ValidateFundingTypeAsync(fundingType) == false)
-                {
-                    rtn.Result = ContractProcessResultType.FundingTypeValidationFailed;
-
-                    string msg = $"Contract event for Contract [{evt.ContractNumber}] Version [{evt.ContractVersion}] with funding type [{fundingType}] has been ignored.";
-                    _loggerAdapter.LogWarning(msg);
-                    await _auditService.TrySendAuditAsync(new Audit.Api.Client.Models.Audit()
-                    {
-                        Action = Audit.Api.Client.Enumerations.ActionType.ContractFeedEventFilteredOut,
-                        Message = msg,
-                        Severity = Audit.Api.Client.Enumerations.SeverityLevel.Information,
-                        Ukprn = evt.UKPRN,
-                        User = _auditApiUser
-                    });
-                }
-
-                contractList.Add(evt);
-            }
-
-            rtn.ContactEvents = contractList;
-            if (rtn.Result == ContractProcessResultType.OperationFailed)
-            {
-                rtn.Result = ContractProcessResultType.Successful;
+                    Result = await GetProcessedResultType(feedContract, ns, evt),
+                    ContractEvent = evt
+                });
             }
 
             _loggerAdapter.LogInformation($"[{nameof(Deserializer_v1103)}.{nameof(DeserializeAsync)}] - Deserialistion completed.");
-            return rtn;
+            return contractList;
+        }
+
+        private async Task<ContractProcessResultType> GetProcessedResultType(XmlElement feedItem, XmlNamespaceManager ns, ContractEvent evt)
+        {
+            var contractStatus = feedItem.GetValue<string>("c:contractStatus/c:status", ns);
+            var parentStatus = feedItem.GetValue<string>("c:contractStatus/c:parentStatus", ns);
+
+            var amendmentType = feedItem.GetValue("c:amendmentType", ns, true, "None");
+            var fundingType = feedItem.GetValue<string>("c:fundingType/c:fundingTypeCode", ns);
+
+            var resultCode = !await _validationService.ValidateContractStatusAsync(parentStatus, contractStatus, amendmentType)
+                                ? ContractProcessResultType.StatusValidationFailed
+                                : !await _validationService.ValidateFundingTypeAsync(fundingType)
+                                    ? ContractProcessResultType.FundingTypeValidationFailed
+                                    : ContractProcessResultType.Successful;
+
+            if (resultCode != ContractProcessResultType.Successful)
+            {
+                string msg = $"Contract event for Contract [{evt.ContractNumber}] Version [{evt.ContractVersion}]";
+                msg += resultCode switch
+                {
+                    ContractProcessResultType.StatusValidationFailed => $" with parent status [{parentStatus}], status [{contractStatus}], and amendment type [{amendmentType}] has been ignored.",
+                    ContractProcessResultType.FundingTypeValidationFailed => $" with funding type [{fundingType}] has been ignored.",
+                    _ => throw new NotImplementedException(),
+                };
+
+                _loggerAdapter.LogWarning(msg);
+                await _auditService.TrySendAuditAsync(new Audit.Api.Client.Models.Audit()
+                {
+                    Action = Audit.Api.Client.Enumerations.ActionType.ContractFeedEventFilteredOut,
+                    Message = msg,
+                    Severity = Audit.Api.Client.Enumerations.SeverityLevel.Information,
+                    Ukprn = evt.UKPRN,
+                    User = _auditApiUser
+                });
+            }
+
+            return resultCode;
         }
 
         private ContractEvent DeserializeContractEvent(XmlElement contractElement, XmlNamespaceManager ns)
         {
             var evt = new ContractEvent();
 
-            // UKPRN must always be present
-            var ukprnNode = contractElement.SelectSingleNode("c:contractor/c:ukprn", ns);
-            if (ukprnNode == null)
-            {
-                throw new InvalidOperationException($"[{nameof(Deserializer_v1103)}] required node 'ukprn' is missing.");
-            }
+            evt.UKPRN = contractElement.GetValue<int>("c:contractor/c:ukprn", ns);
+            evt.ContractNumber = contractElement.GetValue<string>("c:contractNumber", ns);
 
-            evt.UKPRN = int.Parse(ukprnNode.InnerText);
+            evt.ContractVersion = contractElement.GetValue<int>("c:contractVersionNumber", ns);
+            evt.ParentContractNumber = contractElement.GetValue<string>("c:parentContractNumber", ns);
+            evt.Status = ParseContractStatus(contractElement.GetValue<string>("c:contractStatus/c:status", ns));
+            evt.ParentStatus = Enum.Parse<ContractParentStatus>(contractElement.GetValue<string>("c:contractStatus/c:parentStatus", ns));
+            evt.ContractPeriodValue = contractElement.GetValue<string>("c:period/c:period", ns);
+            evt.Value = contractElement.GetValue<decimal>("c:contractValue", ns, true);
+            evt.AmendmentType = Enum.Parse<ContractAmendmentType>(contractElement.GetValue<string>("c:amendmentType", ns, true, "None"));
+            evt.Type = contractElement.GetValue<string>("c:contractType", ns, true);
 
-            evt.ContractNumber = contractElement.SelectSingleNode("c:contractNumber", ns).InnerText;
-            evt.ContractVersion = int.Parse(contractElement.SelectSingleNode("c:contractVersionNumber", ns).InnerText);
-
-            var parentContractNumberNode = contractElement.SelectSingleNode("c:parentContractNumber", ns);
-            if (parentContractNumberNode == null)
-            {
-                throw new InvalidOperationException($"[{nameof(DeserializeContractEvent)} required node 'parentContractNumber' is missing.");
-            }
-
-            evt.ParentContractNumber = parentContractNumberNode.InnerText;
-
-            var contractStatus = contractElement.SelectSingleNode("c:contractStatus/c:status", ns).InnerText;
-            evt.Status = ParseContractStatus(contractStatus);
-
-            var parentStatus = contractElement.SelectSingleNode("c:contractStatus/c:parentStatus", ns).InnerText;
-            evt.ParentStatus = Enum.Parse<ContractParentStatus>(parentStatus);
-
-            evt.ContractPeriodValue = contractElement.SelectSingleNode("c:period/c:period", ns).InnerText;
-
-            evt.Value = decimal.Parse(contractElement.SelectSingleNode("c:contractValue", ns)?.InnerText ?? "0");
-
-            var amendmentType = contractElement.SelectSingleNode("c:amendmentType", ns)?.InnerText ?? "None";
-            evt.AmendmentType = Enum.Parse<ContractAmendmentType>(amendmentType);
-            evt.Type = contractElement.SelectSingleNode("c:contractType", ns)?.InnerText;
-
-            var fundingType = contractElement.SelectSingleNode("c:fundingType/c:fundingTypeCode", ns).InnerText;
+            var fundingType = contractElement.GetValue<string>("c:fundingType/c:fundingTypeCode", ns);
             evt.FundingType = ParseContractFundingType(fundingType);
 
             // Start date can be null
-            string startDate = contractElement.SelectSingleNode("c:startDate", ns)?.InnerText;
-            if (!string.IsNullOrWhiteSpace(startDate))
-            {
-                evt.StartDate = DateTime.Parse(startDate);
-            }
+            evt.StartDate = contractElement.GetValue<DateTime?>("c:startDate", ns, true);
 
             // End date can be null
-            string endDate = contractElement.SelectSingleNode("c:endDate", ns)?.InnerText;
-            if (!string.IsNullOrWhiteSpace(endDate))
-            {
-                evt.EndDate = DateTime.Parse(endDate);
-            }
+            evt.EndDate = contractElement.GetValue<DateTime?>("c:endDate", ns, true);
 
-            string signedOn = contractElement.SelectSingleNode("c:ContractApprovalDate", ns)?.InnerText;
-            if (!string.IsNullOrWhiteSpace(signedOn))
-            {
-                evt.SignedOn = DateTime.Parse(signedOn).Date;
-            }
+            evt.SignedOn = contractElement.GetValue<DateTime?>("c:ContractApprovalDate", ns, true);
 
             evt.ContractAllocations = ExtractAllocations(contractElement, ns);
 
@@ -187,25 +149,16 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
         private List<ContractAllocation> ExtractAllocations(XmlElement mainNode, XmlNamespaceManager ns)
         {
             var allocations = new List<ContractAllocation>();
-            var allocationElements = mainNode.SelectNodes("c:contractAllocations/c:contractAllocation", ns);
+            var allocationElements = mainNode.SelectNodesIgnoreCase("c:contractAllocations/c:contractAllocation", ns);
 
             foreach (XmlElement allocationElement in allocationElements)
             {
-                var fundingStreamPeriodCodeNode = allocationElement.SelectSingleNode($"c:fundingStreamPeriodCode", ns);
-                if (fundingStreamPeriodCodeNode == null)
-                {
-                    throw new InvalidOperationException($"[{nameof(Deserializer_v1103)}] required field 'fundingStreamPeriodCode' is missing.");
-                }
-
                 var allocation = new ContractAllocation()
                 {
-                    ContractAllocationNumber = allocationElement.SelectSingleNode($"c:contractAllocationNumber", ns).InnerText,
-
-                    // Funding Stream Period Code must always be present
-                    FundingStreamPeriodCode = fundingStreamPeriodCodeNode.InnerText,
-
-                    LEPArea = allocationElement.SelectSingleNode($"c:ProcurementAttrs/c:LEPName", ns)?.InnerText,
-                    TenderSpecTitle = allocationElement.SelectSingleNode($"c:ProcurementAttrs/c:TenderSpecTitle", ns)?.InnerText
+                    ContractAllocationNumber = allocationElement.GetValue<string>($"c:contractAllocationNumber", ns),
+                    FundingStreamPeriodCode = allocationElement.GetValue<string>($"c:fundingStreamPeriodCode", ns),
+                    LEPArea = allocationElement.GetValue<string>($"c:ProcurementAttrs/c:LEPName", ns, true),
+                    TenderSpecTitle = allocationElement.GetValue<string>($"c:ProcurementAttrs/c:TenderSpecTitle", ns, true)
                 };
 
                 allocations.Add(allocation);
@@ -235,14 +188,9 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             };
         }
 
-        private ContractParentStatus ParseParentContractStatus(string status)
-        {
-            return Enum.Parse<ContractParentStatus>(status);
-        }
-
         private ContractFundingType ParseContractFundingType(string fundingType)
         {
-            return fundingType.ToLower() switch
+            return string.IsNullOrEmpty(fundingType) ? ContractFundingType.Unknown : fundingType.ToLower() switch
             {
                 "main" => ContractFundingType.Mainstream,
                 "esf" => ContractFundingType.Esf,

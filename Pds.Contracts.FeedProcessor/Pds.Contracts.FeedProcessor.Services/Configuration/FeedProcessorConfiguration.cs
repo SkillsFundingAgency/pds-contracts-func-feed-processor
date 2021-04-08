@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Pds.Contracts.FeedProcessor.Services.Configuration
@@ -33,7 +32,14 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration
         /// <inheritdoc/>
         public async Task<Guid> GetLastReadBookmarkId()
         {
-            return await _configReader.GetConfigAsync<Guid>(_lastReadBookmarkId).ConfigureAwait(false);
+            try
+            {
+                return await _configReader.GetConfigAsync<Guid>(_lastReadBookmarkId).ConfigureAwait(false);
+            }
+            catch (KeyNotFoundException)
+            {
+                return Guid.Empty;
+            }
         }
 
         /// <inheritdoc/>
@@ -45,7 +51,14 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration
         /// <inheritdoc/>
         public async Task<int> GetLastReadPage()
         {
-            return await _configReader.GetConfigAsync<int>(_lastReadPage).ConfigureAwait(false);
+            try
+            {
+                return await _configReader.GetConfigAsync<int>(_lastReadPage).ConfigureAwait(false);
+            }
+            catch (KeyNotFoundException)
+            {
+                return -1;
+            }
         }
 
         /// <inheritdoc/>
@@ -57,7 +70,14 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration
         /// <inheritdoc/>
         public async Task<int> GetNumberOfPagesToProcess()
         {
-            return await _configReader.GetConfigAsync<int>(_numberOfPagesToProcess).ConfigureAwait(false);
+            try
+            {
+                return await _configReader.GetConfigAsync<int>(_numberOfPagesToProcess).ConfigureAwait(false);
+            }
+            catch (KeyNotFoundException)
+            {
+                return await _configReader.SetConfigAsync(_numberOfPagesToProcess, 5).ConfigureAwait(false);
+            }
         }
 
         /// <inheritdoc/>

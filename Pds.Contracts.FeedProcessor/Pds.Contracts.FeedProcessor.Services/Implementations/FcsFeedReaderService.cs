@@ -66,7 +66,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             {
                 Entries = _mapper.Map<IList<FeedEntry>>(formatter.Feed.Items),
                 CurrentPageNumber = currentPage,
-                IsSelfPage = currentPageLink is null,
+                IsSelfPage = nextPageLink is null && currentPageLink is null,
                 NextPageNumber = nextPage,
                 PreviousPageNumber = prevPage
             };
@@ -75,8 +75,19 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
         /// <inheritdoc/>
         public async Task<FeedPage> ReadPageAsync(int pageNumber)
         {
-            var result = await Get<string>($"{_feedReaderOptions.FcsAtomFeedSelfPageEndpoint}/{pageNumber}");
-            return ExtractContractEventsFromFeedPageAsync(result);
+            if (pageNumber == -1)
+            {
+                return await ReadSelfPageAsync();
+            }
+            else
+            {
+                var result = await Get<string>($"{_feedReaderOptions.FcsAtomFeedSelfPageEndpoint}/{pageNumber}");
+                var feedPage = ExtractContractEventsFromFeedPageAsync(result);
+                feedPage.IsSelfPage = false;
+                feedPage.CurrentPageNumber = feedPage.CurrentPageNumber == 0 ? pageNumber : feedPage.CurrentPageNumber;
+
+                return feedPage;
+            }
         }
 
         /// <inheritdoc/>
@@ -89,5 +100,6 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
 
             return selfPage;
         }
+
     }
 }

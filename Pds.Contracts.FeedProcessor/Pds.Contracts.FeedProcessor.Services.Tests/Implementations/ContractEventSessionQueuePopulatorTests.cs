@@ -42,12 +42,12 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations.Tests
 
             var expectedResults = new[]
             {
-                new ContractProcessResult
+                new[]
                 {
-                    Result = ContractProcessResultType.Successful,
-                    ContactEvents = new[]
+                    new ContractProcessResult
                     {
-                        new ContractEvent
+                        Result = ContractProcessResultType.Successful,
+                        ContractEvent = new ContractEvent
                         {
                             BookmarkId = new Guid("d2619398-19dc-44e8-b4a9-917796baf6c2"),
                             ContractNumber = "Contract number 1",
@@ -55,18 +55,22 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations.Tests
                         }
                     }
                 },
-                new ContractProcessResult
+                new[]
                 {
-                    Result = ContractProcessResultType.Successful,
-                    ContactEvents = new[]
+                    new ContractProcessResult
                     {
-                        new ContractEvent
+                        Result = ContractProcessResultType.Successful,
+                        ContractEvent = new ContractEvent
                         {
-                            BookmarkId = new Guid("d2619398-19dc-44e8-b4a9-917796baf6c2"),
-                            ContractNumber = "Contract number 2.1",
-                            ContractVersion = 1
-                        },
-                        new ContractEvent
+                                BookmarkId = new Guid("d2619398-19dc-44e8-b4a9-917796baf6c2"),
+                                ContractNumber = "Contract number 2.1",
+                                ContractVersion = 1
+                        }
+                    },
+                    new ContractProcessResult
+                    {
+                        Result = ContractProcessResultType.Successful,
+                        ContractEvent = new ContractEvent
                         {
                             BookmarkId = new Guid("d2619398-19dc-44e8-b4a9-917796baf6c2"),
                             ContractNumber = "Contract number 2.2",
@@ -74,12 +78,12 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations.Tests
                         }
                     }
                 },
-                new ContractProcessResult
+                new[]
                 {
-                    Result = ContractProcessResultType.StatusValidationFailed,
-                    ContactEvents = new[]
+                    new ContractProcessResult
                     {
-                        new ContractEvent
+                        Result = ContractProcessResultType.StatusValidationFailed,
+                        ContractEvent = new ContractEvent
                         {
                             BookmarkId = new Guid("60b04b11-117b-4c6a-9e0a-e2112b88fa64"),
                             ContractNumber = "Contract number 3",
