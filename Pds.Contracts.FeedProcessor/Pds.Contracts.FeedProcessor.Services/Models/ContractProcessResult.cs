@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Xml;
 
 namespace Pds.Contracts.FeedProcessor.Services.Models
 {
@@ -17,5 +18,11 @@ namespace Pds.Contracts.FeedProcessor.Services.Models
         /// Value may be null if result was unsucessful.
         /// </summary>
         public ContractEvent ContractEvent { get; set; }
+
+        /// <summary>
+        /// Gets or sets the xml for this contract.
+        /// Value may be null if the contract xml is invalid.
+        /// </summary>
+        public XmlDocument ContractXml { get; set; }
     }
 }

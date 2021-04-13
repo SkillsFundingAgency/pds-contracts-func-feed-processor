@@ -40,17 +40,16 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         public async Task Deserilize_ReturnsExpected()
         {
             // Arrange
-            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            string xml = LoadPartialXMLFile();
             var document = new XmlDocument();
-            document.Load(filename);
-            var xml = document.SelectSingleNode("/entry/content").OuterXml;
+            document.LoadXml(xml);
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
             IContractValidationService_Setup_ValidateFundingType();
-            IContractValidationService_Setup_ValidateXmlWithSchema();
+            IContractValidationService_Setup_ValidateXmlWithSchema(document);
 
-            var expected = GeneratePocoForESIF9999();
+            var expected = GeneratePocoForESIF9999(document);
 
             var sut = GetDeserializer();
 
@@ -93,22 +92,20 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         public async Task Deserilize_StatusValidationFailure_ReturnsErrorResult()
         {
             // Arrange
-            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            string xml = LoadPartialXMLFile();
             var document = new XmlDocument();
-            document.Load(filename);
-            var xml = document.SelectSingleNode("/entry/content").OuterXml;
+            document.LoadXml(xml);
 
             ILoggerAdapter_SetupLogInformation();
             ILoggerAdapter_SetupLogWarning();
             IAuditService_Setup_TrySend();
-            IContractValidationService_Setup_ValidateXmlWithSchema();
+            IContractValidationService_Setup_ValidateXmlWithSchema(document);
 
             Mock.Get(_validationService)
                 .Setup(p => p.ValidateContractStatusAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
 
-            var expected = GeneratePocoForESIF9999();
-            expected.First().Result = ContractProcessResultType.StatusValidationFailed;
+            var expected = GeneratePocoForESIF9999(document, ContractProcessResultType.StatusValidationFailed);
 
             var sut = GetDeserializer();
 
@@ -125,19 +122,20 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         {
             // Arrange
             string xml = LoadPartialXMLFile();
+            var document = new XmlDocument();
+            document.LoadXml(xml);
 
             ILoggerAdapter_SetupLogInformation();
             ILoggerAdapter_SetupLogWarning();
             IAuditService_Setup_TrySend();
-            IContractValidationService_Setup_ValidateXmlWithSchema();
+            IContractValidationService_Setup_ValidateXmlWithSchema(document);
             IContractValidationService_Setup_ValidateContractStatus();
 
             Mock.Get(_validationService)
                 .Setup(p => p.ValidateFundingTypeAsync(It.IsAny<string>()))
                 .Returns(Task.FromResult(false));
 
-            var expected = GeneratePocoForESIF9999();
-            expected.First().Result = ContractProcessResultType.FundingTypeValidationFailed;
+            var expected = GeneratePocoForESIF9999(document, ContractProcessResultType.FundingTypeValidationFailed);
 
             var sut = GetDeserializer();
 
@@ -158,23 +156,20 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         public void Deserilize_NullUKPRN_RaisesException()
         {
             // Arrange
-            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            string xml = LoadPartialXMLFile();
             var document = new XmlDocument();
-            document.Load(filename);
+            document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
             ns.AddNamespace("c", Deserializer_v1103._contractEvent_Namespace);
 
-            var node = document.SelectSingleNode("/entry/content/c:contract/c:contracts/c:contract/c:contractor/c:ukprn", ns);
+            var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:contractor/c:ukprn", ns);
             node.ParentNode.RemoveChild(node);
-
-            var xml = document.SelectSingleNode("/entry/content").OuterXml;
-
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
             IContractValidationService_Setup_ValidateFundingType();
-            IContractValidationService_Setup_ValidateXmlWithSchema();
+            IContractValidationService_Setup_ValidateXmlWithSchema(document);
 
             var sut = GetDeserializer();
 
@@ -190,22 +185,20 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         public void Deserilize_MissingParentContractNumber_RaisesException()
         {
             // Arrange
-            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            string xml = LoadPartialXMLFile();
             var document = new XmlDocument();
-            document.Load(filename);
+            document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
             ns.AddNamespace("c", Deserializer_v1103._contractEvent_Namespace);
 
-            var node = document.SelectSingleNode("/entry/content/c:contract/c:contracts/c:contract/c:parentContractNumber", ns);
+            var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:parentContractNumber", ns);
             node.ParentNode.RemoveChild(node);
-
-            var xml = document.SelectSingleNode("/entry/content").OuterXml;
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
             IContractValidationService_Setup_ValidateFundingType();
-            IContractValidationService_Setup_ValidateXmlWithSchema();
+            IContractValidationService_Setup_ValidateXmlWithSchema(document);
 
             var sut = GetDeserializer();
 
@@ -221,22 +214,20 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         public void Deserilize_MissingFundingStreamPeriodCode_RaisesException()
         {
             // Arrange
-            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            string xml = LoadPartialXMLFile();
             var document = new XmlDocument();
-            document.Load(filename);
+            document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
             ns.AddNamespace("c", Deserializer_v1103._contractEvent_Namespace);
 
-            var node = document.SelectSingleNode("/entry/content/c:contract/c:contracts/c:contract/c:contractAllocations/c:contractAllocation/c:fundingStreamPeriodCode", ns);
+            var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:contractAllocations/c:contractAllocation/c:fundingStreamPeriodCode", ns);
             node.ParentNode.RemoveChild(node);
-
-            var xml = document.SelectSingleNode("/entry/content").OuterXml;
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
             IContractValidationService_Setup_ValidateFundingType();
-            IContractValidationService_Setup_ValidateXmlWithSchema();
+            IContractValidationService_Setup_ValidateXmlWithSchema(document);
 
             var sut = GetDeserializer();
 
@@ -252,24 +243,22 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         public async Task Deserilize_MissingStartDate_ReturnsNullStartDate()
         {
             // Arrange
-            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            string xml = LoadPartialXMLFile();
             var document = new XmlDocument();
-            document.Load(filename);
+            document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
             ns.AddNamespace("c", Deserializer_v1103._contractEvent_Namespace);
 
-            var node = document.SelectSingleNode("/entry/content/c:contract/c:contracts/c:contract/c:startDate", ns);
+            var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:startDate", ns);
             node.ParentNode.RemoveChild(node);
-
-            var xml = document.SelectSingleNode("/entry/content").OuterXml;
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
             IContractValidationService_Setup_ValidateFundingType();
-            IContractValidationService_Setup_ValidateXmlWithSchema();
+            IContractValidationService_Setup_ValidateXmlWithSchema(document);
 
-            var expected = GeneratePocoForESIF9999();
+            var expected = GeneratePocoForESIF9999(document);
             expected.First().ContractEvent.StartDate = null;
 
             var sut = GetDeserializer();
@@ -285,24 +274,22 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         public async Task Deserilize_MissingEndDate_ReturnsNullEndDate()
         {
             // Arrange
-            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            string xml = LoadPartialXMLFile();
             var document = new XmlDocument();
-            document.Load(filename);
+            document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
             ns.AddNamespace("c", Deserializer_v1103._contractEvent_Namespace);
 
-            var node = document.SelectSingleNode("/entry/content/c:contract/c:contracts/c:contract/c:endDate", ns);
+            var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:endDate", ns);
             node.ParentNode.RemoveChild(node);
-
-            var xml = document.SelectSingleNode("/entry/content").OuterXml;
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
             IContractValidationService_Setup_ValidateFundingType();
-            IContractValidationService_Setup_ValidateXmlWithSchema();
+            IContractValidationService_Setup_ValidateXmlWithSchema(document);
 
-            var expected = GeneratePocoForESIF9999();
+            var expected = GeneratePocoForESIF9999(document);
             expected.First().ContractEvent.EndDate = null;
 
             var sut = GetDeserializer();
@@ -318,24 +305,22 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         public async Task Deserilize_MissingApprovalDate_ReturnsNullSignedOnDate()
         {
             // Arrange
-            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            string xml = LoadPartialXMLFile();
             var document = new XmlDocument();
-            document.Load(filename);
+            document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
             ns.AddNamespace("c", Deserializer_v1103._contractEvent_Namespace);
 
-            var node = document.SelectSingleNode("/entry/content/c:contract/c:contracts/c:contract/c:ContractApprovalDate", ns);
+            var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:ContractApprovalDate", ns);
             node.ParentNode.RemoveChild(node);
-
-            var xml = document.SelectSingleNode("/entry/content").OuterXml;
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
             IContractValidationService_Setup_ValidateFundingType();
-            IContractValidationService_Setup_ValidateXmlWithSchema();
+            IContractValidationService_Setup_ValidateXmlWithSchema(document);
 
-            var expected = GeneratePocoForESIF9999();
+            var expected = GeneratePocoForESIF9999(document);
             expected.First().ContractEvent.SignedOn = null;
 
             var sut = GetDeserializer();
@@ -355,17 +340,16 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         public async Task Deserilize_PartialXML_ReturnsExpectedResult()
         {
             // Arrange
-            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            string xml = LoadPartialXMLFile();
             var document = new XmlDocument();
-            document.Load(filename);
-            var xml = document.SelectSingleNode("/entry/content").OuterXml;
+            document.LoadXml(xml);
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
             IContractValidationService_Setup_ValidateFundingType();
-            IContractValidationService_Setup_ValidateXmlWithSchema();
+            IContractValidationService_Setup_ValidateXmlWithSchema(document);
 
-            var expected = GeneratePocoForESIF9999();
+            var expected = GeneratePocoForESIF9999(document);
 
             var sut = GetDeserializer();
 
@@ -402,23 +386,21 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         public async Task Deserilize_PartialXML_ValidateFundingTypeEnum_ReturnsExpectedResult(string fundingType, ContractFundingType expectedType)
         {
             // Arrange
-            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            string xml = LoadPartialXMLFile();
             var document = new XmlDocument();
-            document.Load(filename);
+            document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
             ns.AddNamespace("c", Deserializer_v1103._contractEvent_Namespace);
 
-            document.SelectSingleNode("/entry/content/c:contract/c:contracts/c:contract/c:fundingType/c:fundingTypeCode", ns).InnerText = fundingType;
-
-            var xml = document.SelectSingleNode("/entry/content").OuterXml;
+            document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:fundingType/c:fundingTypeCode", ns).InnerText = fundingType;
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
             IContractValidationService_Setup_ValidateFundingType();
-            IContractValidationService_Setup_ValidateXmlWithSchema();
+            IContractValidationService_Setup_ValidateXmlWithSchema(document);
 
-            var expected = GeneratePocoForESIF9999();
+            var expected = GeneratePocoForESIF9999(document);
             expected.First().ContractEvent.FundingType = expectedType;
 
             var sut = GetDeserializer();
@@ -439,23 +421,21 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         public async Task Deserilize_PartialXML_ValidateParentContractEnum_ReturnsExpectedResult(string parentStatus, ContractParentStatus expectedParentStatus)
         {
             // Arrange
-            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            string xml = LoadPartialXMLFile();
             var document = new XmlDocument();
-            document.Load(filename);
+            document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
             ns.AddNamespace("c", Deserializer_v1103._contractEvent_Namespace);
 
-            document.SelectSingleNode("/entry/content/c:contract/c:contracts/c:contract/c:contractStatus/c:parentStatus", ns).InnerText = parentStatus;
-
-            var xml = document.SelectSingleNode("/entry/content").OuterXml;
+            document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:contractStatus/c:parentStatus", ns).InnerText = parentStatus;
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
             IContractValidationService_Setup_ValidateFundingType();
-            IContractValidationService_Setup_ValidateXmlWithSchema();
+            IContractValidationService_Setup_ValidateXmlWithSchema(document);
 
-            var expected = GeneratePocoForESIF9999();
+            var expected = GeneratePocoForESIF9999(document);
             expected.First().ContractEvent.ParentStatus = expectedParentStatus;
 
             var sut = GetDeserializer();
@@ -484,23 +464,21 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         public async Task Deserilize_PartialXML_ValidateContractStatusEnum_ReturnsExpectedResult(string contractStatus, ContractStatus expectedStatus)
         {
             // Arrange
-            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            string xml = LoadPartialXMLFile();
             var document = new XmlDocument();
-            document.Load(filename);
+            document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
             ns.AddNamespace("c", Deserializer_v1103._contractEvent_Namespace);
 
-            document.SelectSingleNode("/entry/content/c:contract/c:contracts/c:contract/c:contractStatus/c:status", ns).InnerText = contractStatus;
-
-            var xml = document.SelectSingleNode("/entry/content").OuterXml;
+            document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:contractStatus/c:status", ns).InnerText = contractStatus;
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
             IContractValidationService_Setup_ValidateFundingType();
-            IContractValidationService_Setup_ValidateXmlWithSchema();
+            IContractValidationService_Setup_ValidateXmlWithSchema(document);
 
-            var expected = GeneratePocoForESIF9999();
+            var expected = GeneratePocoForESIF9999(document);
             expected.First().ContractEvent.Status = expectedStatus;
 
             var sut = GetDeserializer();
@@ -520,23 +498,21 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         public async Task Deserilize_PartialXML_ValidateAmendmentTypeEnum_ReturnsExpectedResult(string amendment, ContractAmendmentType expectedAmendment)
         {
             // Arrange
-            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            string xml = LoadPartialXMLFile();
             var document = new XmlDocument();
-            document.Load(filename);
+            document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
             ns.AddNamespace("c", Deserializer_v1103._contractEvent_Namespace);
 
-            document.SelectSingleNode("/entry/content/c:contract/c:contracts/c:contract/c:amendmentType", ns).InnerText = amendment;
-
-            var xml = document.SelectSingleNode("/entry/content").OuterXml;
+            document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:amendmentType", ns).InnerText = amendment;
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
             IContractValidationService_Setup_ValidateFundingType();
-            IContractValidationService_Setup_ValidateXmlWithSchema();
+            IContractValidationService_Setup_ValidateXmlWithSchema(document);
 
-            var expected = GeneratePocoForESIF9999();
+            var expected = GeneratePocoForESIF9999(document);
             expected.First().ContractEvent.AmendmentType = expectedAmendment;
 
             var sut = GetDeserializer();
@@ -612,7 +588,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             };
         }
 
-        private static IList<ContractProcessResult> GeneratePocoForESIF9999()
+        private static IList<ContractProcessResult> GeneratePocoForESIF9999(XmlDocument document = null, ContractProcessResultType result = ContractProcessResultType.Successful)
         => new List<ContractProcessResult>
         {
             new ContractProcessResult
@@ -646,7 +622,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                     UKPRN = 10000001,
                     Value = 9099922.0000m
                 },
-                Result = ContractProcessResultType.Successful
+                Result = result,
+                ContractXml = document
             }
         };
 
@@ -676,11 +653,11 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 .Verifiable();
         }
 
-        private void IContractValidationService_Setup_ValidateXmlWithSchema()
+        private void IContractValidationService_Setup_ValidateXmlWithSchema(XmlDocument document = null)
         {
             Mock.Get(_validationService)
                 .Setup(p => p.ValidateXmlWithSchema(It.IsAny<string>()))
-                .Returns(true)
+                .Returns(document)
                 .Verifiable();
         }
 

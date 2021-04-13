@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 {
@@ -206,6 +207,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
         private IEnumerable<ContractProcessResult> GetOneContractProcessResult()
         {
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml("<test>value</test>");
             yield return new ContractProcessResult()
             {
                 ContractEvent = new ContractEvent()
@@ -215,7 +218,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                     ContractNumber = "Test456",
                     ContractVersion = 789
                 },
-                Result = ContractProcessResultType.Successful
+                Result = ContractProcessResultType.Successful,
+                ContractXml = xmlDoc
             };
         }
 

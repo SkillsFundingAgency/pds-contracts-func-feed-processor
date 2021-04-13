@@ -50,10 +50,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             var contractList = new List<ContractProcessResult>();
 
             // Ensure xml is valid.
-            _validationService.ValidateXmlWithSchema(xml);
-
-            XmlDocument document = new XmlDocument();
-            document.LoadXml(xml);
+            var document = _validationService.ValidateXmlWithSchema(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
             ns.AddNamespace("c", _contractEvent_Namespace);
@@ -68,7 +65,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 contractList.Add(new ContractProcessResult
                 {
                     Result = await GetProcessedResultType(feedContract, ns, evt),
-                    ContractEvent = evt
+                    ContractEvent = evt,
+                    ContractXml = document
                 });
             }
 

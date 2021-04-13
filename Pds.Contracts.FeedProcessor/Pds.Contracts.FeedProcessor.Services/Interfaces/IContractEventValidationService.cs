@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using System.Xml;
 
 namespace Pds.Contracts.FeedProcessor.Services.Interfaces
 {
@@ -13,7 +14,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Interfaces
         /// <param name="contents">The xml.</param>
         /// <returns>True if the schema is valid, false otherwise.</returns>
         /// <exception cref="System.Xml.Schema.XmlSchemaValidationException">Raised if the schema is not valid.</exception>
-        bool ValidateXmlWithSchema(string contents);
+        XmlDocument ValidateXmlWithSchema(string contents);
 
         /// <summary>
         /// Validates the status of the given contract.

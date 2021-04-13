@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Xml;
 using System.Xml.Schema;
 
 namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
@@ -98,6 +99,10 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             // Arrange
             var filename = Path.Combine(_baseDirectory, _partialXmlDocument);
             var fileContents = File.ReadAllText(filename);
+
+            XmlDocument expected = new XmlDocument();
+            expected.LoadXml(fileContents);
+
             _validationSettings.SchemaVersion = "11_03";
             _validationSettings.SchemaManifestFilename = "none-existant-file.xsd";
 
@@ -108,11 +113,10 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             var service = GetValidationService();
 
             // Act
-            var result = service.ValidateXmlWithSchema(fileContents);
+            var actual = service.ValidateXmlWithSchema(fileContents);
 
             // Assert
-            result.Should().BeTrue("Because when the schema file is missing, XML validation failure is logged but process continues.");
-
+            actual.Should().BeEquivalentTo(expected, "Because when the schema file is missing, XML validation failure is logged but process continues.");
             Verify_All();
         }
 
@@ -133,7 +137,9 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             var result = service.ValidateXmlWithSchema(fileContents);
 
             // Assert
-            result.Should().BeTrue("Because the schema version validation is turned off.");
+            //result.Should().BeTrue("Because the schema version validation is turned off.");
+
+            Assert.Fail("Need to compare xml documents");
             Verify_All();
         }
 

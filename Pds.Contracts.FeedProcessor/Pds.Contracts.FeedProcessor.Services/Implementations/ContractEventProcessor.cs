@@ -1,4 +1,5 @@
-﻿using Pds.Contracts.FeedProcessor.Services.Interfaces;
+﻿using Pds.Contracts.FeedProcessor.Services.Extensions;
+using Pds.Contracts.FeedProcessor.Services.Interfaces;
 using Pds.Contracts.FeedProcessor.Services.Models;
 using Pds.Core.Logging;
 using System;
@@ -6,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Pds.Contracts.FeedProcessor.Services.Implementations
 {
@@ -74,7 +77,11 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                         // Save xml to blob
                         // Filename format : [Entry.Updated]_[ContractNumber]_v[ContractVersion]_[Entry.BookmarkId].xml
                         string filename = $"{feedEntry.Updated:yyyyMMddHHmmss}_{item.ContractEvent.ContractNumber}_v{item.ContractEvent.ContractVersion}_{item.ContractEvent.BookmarkId}.xml";
-                        await _blobStorageService.UploadAsync(filename, Encoding.UTF8.GetBytes(feedEntry.Content));
+
+                        // Saved XML needs to be in lowercase to be compatible with the exisitng code on the monolith
+                        var lowerCaseXmlString = ConvertToLowerCaseXml(item);
+
+                        await _blobStorageService.UploadAsync(filename, Encoding.UTF8.GetBytes(lowerCaseXmlString));
 
                         item.ContractEvent.ContractEventXml = filename;
 
@@ -93,6 +100,19 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             }
 
             return contractEvents;
+        }
+
+        private static string ConvertToLowerCaseXml(ContractProcessResult item)
+        {
+            XDocument document = null;
+            using (var reader = new XmlNodeReader(item.ContractXml.DocumentElement.FirstChild))
+            {
+                reader.MoveToContent();
+                document = XDocument.Load(reader);
+            }
+
+            document.LowerCaseAllElementNames();
+            return document.Root.ToString();
         }
     }
 }

@@ -87,42 +87,41 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
         }
 
         /// <inheritdoc/>
-        public bool ValidateXmlWithSchema(string contents)
+        public XmlDocument ValidateXmlWithSchema(string contents)
         {
             _logger.LogInformation($"[{nameof(ValidateXmlWithSchema)}] Attempting to validate xml string.");
 
-            if (_xmlSchema == null)
-            {
-                // Schema file is not accessible or not found.
-                // The schema file may not be present if the code is being downloaded from github.
-                // The file should always be present in Azure.
-                _logger.LogWarning($"[{nameof(ValidateXmlWithSchema)}] XML validation failed - Embeded schema file not found.");
-                return true;
-            }
-
             try
             {
-                var settings = new XmlReaderSettings();
-                settings.Schemas.Add(_xmlSchema);
-                settings.ValidationType = ValidationType.Schema;
-
-                using var sr = new StringReader(contents);
                 XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.LoadXml(contents);
 
-                XmlReader reader = XmlReader.Create(sr);
-                xmlDocument.Load(reader);
-                xmlDocument.Schemas.Add(_xmlSchema);
-                xmlDocument.Validate(XmlValidationEventHandler);
+                if (_xmlSchema != null)
+                {
+                    var settings = new XmlReaderSettings();
+                    settings.Schemas.Add(_xmlSchema);
+                    settings.ValidationType = ValidationType.Schema;
+
+                    xmlDocument.Schemas.Add(_xmlSchema);
+                    xmlDocument.Validate(XmlValidationEventHandler);
+
+                    _logger.LogInformation($"[{nameof(ValidateXmlWithSchema)}] Xml validation was successful.");
+                }
+                else
+                {
+                    // Schema file is not accessible or not found.
+                    // The schema file may not be present if the code is being downloaded from github.
+                    // The file should always be present in Azure.
+                    _logger.LogWarning($"[{nameof(ValidateXmlWithSchema)}] XML validation failed - Embeded schema file not found.");
+                }
+
+                return xmlDocument;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "One or more errors occurred during schema validation.");
                 throw;
             }
-
-            _logger.LogInformation($"[{nameof(ValidateXmlWithSchema)}] Xml validation was successful.");
-
-            return true;
         }
 
 
