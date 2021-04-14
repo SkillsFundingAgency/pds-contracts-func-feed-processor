@@ -238,26 +238,24 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             act.Should().NotThrow();
         }
 
-        [TestMethod, Ignore("This is working on local environment, need to troubleshoot for azure devops env.")]
+        [TestMethod]
         public void Deserilize_Missing_ContractAllocationNumber_ShouldNotRaiseException()
         {
             // Arrange
-            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            string xml = LoadPartialXMLFile();
             var document = new XmlDocument();
-            document.Load(filename);
+            document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
             ns.AddNamespace("c", Deserializer_v1103._contractEvent_Namespace);
 
-            var node = document.SelectSingleNode("/entry/content/c:contract/c:contracts/c:contract/c:contractAllocations/c:contractAllocation/c:contractAllocationNumber", ns);
+            var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:contractAllocations/c:contractAllocation/c:contractAllocationNumber", ns);
             node.ParentNode.RemoveChild(node);
-
-            var xml = document.SelectSingleNode("/entry/content").OuterXml;
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
             IContractValidationService_Setup_ValidateFundingType();
-            IContractValidationService_Setup_ValidateXmlWithSchema();
+            IContractValidationService_Setup_ValidateXmlWithSchema(document);
 
             var sut = GetDeserializer();
 
