@@ -153,8 +153,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             {
                 var allocation = new ContractAllocation()
                 {
-                    ContractAllocationNumber = allocationElement.GetValue<string>($"c:contractAllocationNumber", ns),
-                    FundingStreamPeriodCode = allocationElement.GetValue<string>($"c:fundingStreamPeriodCode", ns),
+                    ContractAllocationNumber = allocationElement.GetValue<string>($"c:contractAllocationNumber", ns, true),
+                    FundingStreamPeriodCode = allocationElement.GetValue<string>($"c:fundingStreamPeriodCode", ns, true),
                     LEPArea = allocationElement.GetValue<string>($"c:ProcurementAttrs/c:LEPName", ns, true),
                     TenderSpecTitle = allocationElement.GetValue<string>($"c:ProcurementAttrs/c:TenderSpecTitle", ns, true)
                 };

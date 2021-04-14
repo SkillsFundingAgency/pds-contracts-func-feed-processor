@@ -211,7 +211,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         }
 
         [TestMethod]
-        public void Deserilize_MissingFundingStreamPeriodCode_RaisesException()
+        public void Deserilize_MissingFundingStreamPeriodCode_ShouldNotRaiseException()
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -235,8 +235,37 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Func<Task> act = async () => await sut.DeserializeAsync(xml);
 
             // Assert
-            act.Should().Throw<InvalidOperationException>()
-                .WithMessage("*fundingStreamPeriodCode*", "Because Funding Stream Period Code is a required value.");
+            act.Should().NotThrow();
+        }
+
+        [TestMethod, Ignore("This is working on local environment, need to troubleshoot for azure devops env.")]
+        public void Deserilize_Missing_ContractAllocationNumber_ShouldNotRaiseException()
+        {
+            // Arrange
+            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            var document = new XmlDocument();
+            document.Load(filename);
+
+            var ns = new XmlNamespaceManager(new NameTable());
+            ns.AddNamespace("c", Deserializer_v1103._contractEvent_Namespace);
+
+            var node = document.SelectSingleNode("/entry/content/c:contract/c:contracts/c:contract/c:contractAllocations/c:contractAllocation/c:contractAllocationNumber", ns);
+            node.ParentNode.RemoveChild(node);
+
+            var xml = document.SelectSingleNode("/entry/content").OuterXml;
+
+            ILoggerAdapter_SetupLogInformation();
+            IContractValidationService_Setup_ValidateContractStatus();
+            IContractValidationService_Setup_ValidateFundingType();
+            IContractValidationService_Setup_ValidateXmlWithSchema();
+
+            var sut = GetDeserializer();
+
+            // Act
+            Func<Task> act = async () => await sut.DeserializeAsync(xml);
+
+            // Assert
+            act.Should().NotThrow();
         }
 
         [TestMethod]
