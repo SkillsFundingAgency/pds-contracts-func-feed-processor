@@ -91,6 +91,10 @@
     "EnableSchemaVersionValidation": {
       "type": "string",
       "defaultValue": "false"
+    },
+    "SchemaValidationSettingsSchemaVersion": {
+      "type": "string",
+      "defaultValue": "DISABLED"
     }
   },
   "variables": {
@@ -234,7 +238,7 @@
               },
               {
                 "name": "SchemaValidationSettings:SchemaVersion",
-                "value": "11_03"
+                "value": "[parameters('SchemaValidationSettingsSchemaVersion')]"
               },
               {
                 "name": "SchemaValidationSettings:SchemaManifestFilename",
