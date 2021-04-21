@@ -57,12 +57,15 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
 
                 _logger.LogInformation($"{nameof(ExtractAndPopulateQueueAsync)} - On [Self page] found [{newEntries.Count()}] new contract events to process.");
 
-                await _queuePopulator.PopulateSessionQueue(queue, newEntries);
-                await _configuration.SetLastReadPage(selfPage.CurrentPageNumber);
+                if (newEntries.Any())
+                {
+                    await _queuePopulator.PopulateSessionQueue(queue, newEntries);
+                    await _configuration.SetLastReadPage(selfPage.CurrentPageNumber);
+                }
             }
             else
             {
-                // Stroy 3.
+                // Story 3.
                 await ReadArchives(queue, lastReadBookmarkEntry, lastReadPage, numberOfPagesToProcess);
             }
         }
@@ -110,8 +113,11 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
 
                 _logger.LogInformation($"{nameof(ExtractAndPopulateQueueAsync)} - On [{(thisPage.IsSelfPage ? "Self" : thisPage.CurrentPageNumber.ToString())}] found [{thisPage.Entries.Count()}] new contract events to process.");
 
-                await _queuePopulator.PopulateSessionQueue(queue, thisPage.Entries);
-                await _configuration.SetLastReadPage(thisPage.CurrentPageNumber);
+                if (thisPage.Entries.Any())
+                {
+                    await _queuePopulator.PopulateSessionQueue(queue, thisPage.Entries);
+                    await _configuration.SetLastReadPage(thisPage.CurrentPageNumber);
+                }
             }
         }
     }
