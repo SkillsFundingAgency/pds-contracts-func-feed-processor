@@ -95,6 +95,10 @@
     "SchemaValidationSettingsSchemaVersion": {
       "type": "string",
       "defaultValue": "DISABLED"
+    },
+    "DisableFunctionApps": {
+      "type": "bool",
+      "defaultValue": false
     }
   },
   "variables": {
@@ -281,7 +285,6 @@
                 "name": "AzureStorageAccountOptions:TableAccessOptions:MaxAttempts",
                 "value": "3"
               },
-
               {
                 "name": "AuditApiConfiguration:ApiBaseAddress",
                 "value": "[parameters('AuditApiBaseAddress')]"
@@ -353,6 +356,14 @@
               {
                 "name": "FeedReaderOptions:HttpPolicyOptions:CircuitBreakerDurationOfBreak",
                 "value": "0.00:00:15"
+              },
+              {
+                "name": "AzureWebJobs.FCSAtomFeedProcessorFunctionHttpFunction.Disabled",
+                "value": "[parameters('DisableFunctionApps')]"
+              },
+              {
+                "name": "AzureWebJobs.FcsContractEventFeedReaderTimerFunction.Disabled",
+                "value": "[parameters('DisableFunctionApps')]"
               }
             ]
           }
