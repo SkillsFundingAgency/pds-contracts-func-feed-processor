@@ -394,6 +394,9 @@
           },
           "EnableSessions": {
             "value": true
+          },
+          "MessageLockDuration": {
+            "value": "PT5M"
           }
         }
       }
