@@ -1,0 +1,48 @@
+<entry>
+  <id>uuid:12345678-9abc-def0-1234-123456789123</id>
+  <title type="text">Contract ESIF-9999:5.0 was Published to Provider</title>
+  <summary type="text">{'UKPRN': 10000001, 'contractNumber': 'ESIF-9999', 'version': 5}</summary>
+  <published>2021-01-01T01:01:01Z</published>
+  <updated>2021-01-02T01:01:01Z</updated>
+  <category term="Contract Published to Provider" label="A contract has been Published to Provider" />
+  <content type="application/vnd.sfa.contract.v1+atom+xml">
+    <contract schemaVersion="11.03" xmlns="urn:sfa:schemas:contract" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <contracts>
+        <contract>
+          <fundingType>
+            <fundingTypeCode>ESF</fundingTypeCode>
+          </fundingType>
+          <period>
+            <period>1420</period>
+          </period>
+          <contractAllocations>
+            <contractAllocation>
+              <contractAllocationNumber>ESF-9999</contractAllocationNumber>
+              <fundingStreamPeriodCode>ESF1420</fundingStreamPeriodCode>
+              <ProcurementAttrs>
+                <TenderSpecTitle>SSW</TenderSpecTitle>
+                <LEPName>LEP Name</LEPName>
+              </ProcurementAttrs>
+            </contractAllocation>
+          </contractAllocations>
+          <contractNumber>ESIF-9999</contractNumber>
+          <contractVersionNumber>5</contractVersionNumber>
+          <ContractApprovalDate>2019-03-01</ContractApprovalDate>
+          <contractor>
+            <ukprn>10000001</ukprn>
+          </contractor>
+          <contractType>Contract for Services</contractType>
+          <startDate>2019-04-01</startDate>
+          <endDate>2023-03-31</endDate>
+          <contractStatus>
+            <status>Published To Provider</status>
+            <parentStatus>Draft</parentStatus>
+          </contractStatus>
+          <contractValue>9099922.0000</contractValue>
+          <parentContractNumber>ESFA-10001</parentContractNumber>
+          <amendmentType>Variation</amendmentType>
+        </contract>
+      </contracts>
+    </contract>
+  </content>
+</entry>
