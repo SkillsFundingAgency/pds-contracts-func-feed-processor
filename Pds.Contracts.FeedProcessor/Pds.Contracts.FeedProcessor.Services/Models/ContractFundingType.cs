@@ -146,6 +146,12 @@ namespace Pds.Contracts.FeedProcessor.Services.Models
         /// The procured nineteen to twenty four traineeship
         /// </summary>
         [Display(Name = "Procured 19 to 24 traineeship", Description = "Procured 19 to 24 traineeship")]
-        ProcuredNineteenToTwentyFourTraineeship = 22
+        ProcuredNineteenToTwentyFourTraineeship = 22,
+
+        /// <summary>
+        /// Adult Education Budget (Contract for Service)
+        /// </summary>
+        [Display(Name = "Adult Education Budget (Contract for Service)", Description = "Adult Education Budget (Contract for Service)")]
+        AdultEducationBudgetContractForService = 23
     }
 }

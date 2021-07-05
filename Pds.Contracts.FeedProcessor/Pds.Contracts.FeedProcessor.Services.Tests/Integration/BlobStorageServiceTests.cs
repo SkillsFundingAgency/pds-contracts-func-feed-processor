@@ -31,7 +31,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Integration
 
         #region Upload
 
-        [TestMethod]
+        [TestMethod, TestCategory("Integration")]
         public async Task UploadAsync_IntegrationTest()
         {
             // Arrange

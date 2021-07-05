@@ -25,7 +25,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
         #region Upload
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task UploadAsync_UploadsRequestFile_As_AzureBlob()
         {
             // Arrange
@@ -51,7 +51,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Verify_All();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void UploadAsync_UploadsRequestFile_As_AzureBlob_AllowsExceptionToBeRaised()
         {
             // Arrange

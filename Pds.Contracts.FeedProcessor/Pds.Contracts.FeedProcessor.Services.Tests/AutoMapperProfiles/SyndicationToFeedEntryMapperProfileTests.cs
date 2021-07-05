@@ -9,7 +9,7 @@ namespace Pds.Contracts.FeedProcessor.Services.AutoMapperProfiles.Tests
     [TestClass, TestCategory("Unit")]
     public class SyndicationToFeedEntryMapperProfileTests
     {
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void SyndicationToFeedEntryMapperProfileTest()
         {
             // Arrange

@@ -13,7 +13,7 @@ using System.Xml;
 
 namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 {
-    [TestClass]
+    [TestClass, TestCategory("Unit")]
     public class ContractEventProcessorTests
     {
         private readonly IDeserilizationService<ContractProcessResult> _deserilizationService
@@ -27,7 +27,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
         #region ProcessEventsAsync
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ProcessEventsAsync_NoContracts_ReturnsExpectedResult()
         {
             // Arrange
@@ -52,7 +52,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Verify_All();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ProcessEventsAsync_OneContract_ReturnsExpectedResult()
         {
             // Arrange
@@ -88,7 +88,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow(ContractProcessResultType.FundingTypeValidationFailed)]
         [DataRow(ContractProcessResultType.OperationFailed)]
         [DataRow(ContractProcessResultType.StatusValidationFailed)]
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ProcessEventsAsync_FailedContract_DoesNotSaveToAzure(ContractProcessResultType resultType)
         {
             // Arrange
@@ -118,7 +118,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Verify_All();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void ProcessEventsAsync_NullArgument_RaisesException()
         {
             // Arrange
@@ -134,7 +134,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Verify_All();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void ProcessEventsAsync_EmptyArgument_RaisesException()
         {
             // Arrange
@@ -150,7 +150,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Verify_All();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void ProcessEventsAsync_OnBlobStorageException_ReturnsExpectedResult()
         {
             // Arrange
@@ -208,7 +208,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         private IEnumerable<ContractProcessResult> GetOneContractProcessResult()
         {
             var xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml("<test>value</test>");
+            xmlDoc.LoadXml("<test><test1>value</test1></test>");  // another element required here....
             yield return new ContractProcessResult()
             {
                 ContractEvent = new ContractEvent()

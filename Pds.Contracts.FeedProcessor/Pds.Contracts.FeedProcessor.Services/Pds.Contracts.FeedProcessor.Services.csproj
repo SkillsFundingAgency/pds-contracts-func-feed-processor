@@ -10,7 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Schema\11_03\contract_corporate_schema_v11.03.xsd" />
+    <EmbeddedResource Include="Schema\11_03\contract_corporate_schema_v11.03.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   
   <ItemGroup>

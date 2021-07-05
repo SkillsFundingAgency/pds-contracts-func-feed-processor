@@ -32,7 +32,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations.Tests
             _mockCollector = Mock.Of<IAsyncCollector<Message>>(MockBehavior.Strict);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ExtractAndPopulateQueueAsync_SelfPage_TestAsync()
         {
             // Arrange
@@ -66,7 +66,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations.Tests
                 .Verify(l => l.Log(LogLevel.Information, 0, It.IsAny<It.IsAnyType>(), null, It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Exactly(2));
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void ExtractAndPopulateQueueAsync_ReadArchives_ThrowsException_TestAsync()
         {
             // Arrange
@@ -100,7 +100,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations.Tests
                 .Verify(l => l.Log(LogLevel.Information, 0, It.IsAny<It.IsAnyType>(), null, It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Once);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ExtractAndPopulateQueueAsync_ReadArchives_TestAsync()
         {
             // Arrange

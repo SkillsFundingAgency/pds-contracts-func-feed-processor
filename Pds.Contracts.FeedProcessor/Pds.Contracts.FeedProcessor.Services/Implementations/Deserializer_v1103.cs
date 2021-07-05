@@ -209,6 +209,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "ccf" => ContractFundingType.CollegeCollaborationFund,
                 "feca" => ContractFundingType.FurtherEducationConditionAllocation,
                 "19trn2020" => ContractFundingType.ProcuredNineteenToTwentyFourTraineeship,
+                "aeb2021" => ContractFundingType.AdultEducationBudgetContractForService,
 
                 _ => ContractFundingType.Unknown
             };
