@@ -6,10 +6,10 @@ using System.Xml.Linq;
 
 namespace Pds.Contracts.FeedProcessor.Services.Tests.Implementations
 {
-    [TestClass]
+    [TestClass, TestCategory("Unit")]
     public class XDocumentExtensionsTests
     {
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void LowerCaseAllElementNames_XDocument_NullArgument_ThrowsException()
         {
             // Arrange
@@ -22,7 +22,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Implementations
             act.Should().Throw<ArgumentNullException>();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void LowerCaseAllElementNames_XDocument_ConvertsCurrentElement()
         {
             // Arrange
@@ -34,11 +34,12 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Implementations
             // Act
             document.LowerCaseAllElementNames();
 
+            var result = document.ToString();
             // Assert
-            document.ToString().Should().BeEquivalentTo(expectedString);
+            result.Should().Be(expectedString);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void LowerCaseAllElementNames_XElement_NullArgument_ThrowsException()
         {
             // Arrange
@@ -51,7 +52,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Implementations
             act.Should().Throw<ArgumentNullException>();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void LowerCaseAllElementNames_XElement_ConvertsCurrentElement()
         {
             // Arrange

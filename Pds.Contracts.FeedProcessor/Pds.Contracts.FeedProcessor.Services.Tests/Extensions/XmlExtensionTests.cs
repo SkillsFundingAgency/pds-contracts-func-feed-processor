@@ -38,7 +38,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Extensions.Tests
             }
         }
 
-        [DataTestMethod]
+        [DataTestMethod, TestCategory("Unit")]
         [DynamicData(nameof(GetValue_ExpectedTestScenarios))]
         public void GetValueTest_ReturnsExpectedResult(string innerText, bool isOptional, string xpath, object expectedValue)
         {
@@ -74,7 +74,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Extensions.Tests
             }
         }
 
-        [DataTestMethod]
+        [DataTestMethod, TestCategory("Unit")]
         [DynamicData(nameof(GetValue_ExceptionTestScenarios))]
         public void GetValueTest_ThrowsException(string innerText, bool isOptional, string xpath, object expectedValue)
         {
@@ -105,7 +105,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Extensions.Tests
             }
         }
 
-        [DataTestMethod]
+        [DataTestMethod, TestCategory("Unit")]
         [DataRow("//c:nestedNodeValue")]
         [DataRow("//c:nestednodevalue")]
         [DataRow("//c:NESTEDNODEVALUE")]

@@ -38,7 +38,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations.Tests
             });
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void ExtractContractEventsFromFeedPageAsyncTest()
         {
             //Arrange
@@ -96,7 +96,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations.Tests
             results.Should().BeEquivalentTo(expectedFeedPage);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ReadPageAsyncTestAsync()
         {
             //Arrange
@@ -169,7 +169,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations.Tests
             VerifyMocks();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ReadPageAsync_ReturnsSelfPage_TestAsync()
         {
             //Arrange
@@ -240,7 +240,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations.Tests
             VerifyMocks();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ReadSelfPageAsyncTestAsync()
         {
             //Arrange

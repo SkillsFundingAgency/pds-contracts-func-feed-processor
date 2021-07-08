@@ -36,7 +36,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
         #region Base Result
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task Deserilize_ReturnsExpected()
         {
             // Arrange
@@ -65,7 +65,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
         #region Validation Errors
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void Deserilize_SchemaValidationError_RaisesException()
         {
             // Arrange
@@ -88,7 +88,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Verify_All();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task Deserilize_StatusValidationFailure_ReturnsErrorResult()
         {
             // Arrange
@@ -117,7 +117,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Verify_All();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task Deserilize_FundingTypeValidationFailure_ReturnsErrorResult()
         {
             // Arrange
@@ -152,7 +152,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
         #region Nullable values
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void Deserilize_NullUKPRN_RaisesException()
         {
             // Arrange
@@ -181,7 +181,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 .WithMessage("*Ukprn*", "Because UKPRN is a required value.");
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void Deserilize_MissingParentContractNumber_RaisesException()
         {
             // Arrange
@@ -210,7 +210,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 .WithMessage("*parentContractNumber*", "Because Parent Contract Number is a required value.");
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void Deserilize_MissingFundingStreamPeriodCode_ShouldNotRaiseException()
         {
             // Arrange
@@ -238,7 +238,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             act.Should().NotThrow();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void Deserilize_Missing_ContractAllocationNumber_ShouldNotRaiseException()
         {
             // Arrange
@@ -266,7 +266,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             act.Should().NotThrow();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task Deserilize_MissingStartDate_ReturnsNullStartDate()
         {
             // Arrange
@@ -297,7 +297,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             actual.Should().BeEquivalentTo(expected, "Because the start date can be null.");
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task Deserilize_MissingEndDate_ReturnsNullEndDate()
         {
             // Arrange
@@ -328,7 +328,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             actual.Should().BeEquivalentTo(expected, "Because the end date can be null.");
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task Deserilize_MissingApprovalDate_ReturnsNullSignedOnDate()
         {
             // Arrange
@@ -363,7 +363,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
         #region XML Samples
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task Deserilize_PartialXML_ReturnsExpectedResult()
         {
             // Arrange
@@ -409,7 +409,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("feca", ContractFundingType.FurtherEducationConditionAllocation)]
         [DataRow("19trn2020", ContractFundingType.ProcuredNineteenToTwentyFourTraineeship)]
         [DataRow("SomeOtherValue", ContractFundingType.Unknown)]
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task Deserilize_PartialXML_ValidateFundingTypeEnum_ReturnsExpectedResult(string fundingType, ContractFundingType expectedType)
         {
             // Arrange
@@ -444,7 +444,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("Approved", ContractParentStatus.Approved)]
         [DataRow("Withdrawn", ContractParentStatus.Withdrawn)]
         [DataRow("Closed", ContractParentStatus.Closed)]
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task Deserilize_PartialXML_ValidateParentContractEnum_ReturnsExpectedResult(string parentStatus, ContractParentStatus expectedParentStatus)
         {
             // Arrange
@@ -487,7 +487,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("under termination", ContractStatus.UnderTermination)]
         [DataRow("terminated", ContractStatus.Terminated)]
         [DataRow("modified", ContractStatus.Modified)]
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task Deserilize_PartialXML_ValidateContractStatusEnum_ReturnsExpectedResult(string contractStatus, ContractStatus expectedStatus)
         {
             // Arrange
@@ -521,7 +521,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("None", ContractAmendmentType.None)]
         [DataRow("Variation", ContractAmendmentType.Variation)]
         [DataRow("Notification", ContractAmendmentType.Notification)]
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task Deserilize_PartialXML_ValidateAmendmentTypeEnum_ReturnsExpectedResult(string amendment, ContractAmendmentType expectedAmendment)
         {
             // Arrange

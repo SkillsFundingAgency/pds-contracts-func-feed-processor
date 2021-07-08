@@ -24,7 +24,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration.Tests
             _mockReader = Mock.Of<IConfigReader>(MockBehavior.Strict);
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task GetLastReadBookmarkIdTestAsync()
         {
             // Arrange
@@ -40,7 +40,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration.Tests
             Mock.Get(_mockReader).VerifyAll();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task SetLastReadBookmarkIdTestAsync()
         {
             // Arrange
@@ -55,7 +55,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration.Tests
             Mock.Get(_mockReader).VerifyAll();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task GetLastReadPageTestAsync()
         {
             // Arrange
@@ -71,7 +71,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration.Tests
             Mock.Get(_mockReader).VerifyAll();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task SetLastReadPageTestAsync()
         {
             // Arrange
@@ -86,7 +86,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration.Tests
             Mock.Get(_mockReader).VerifyAll();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task GetNumberOfPagesToProcessTestAsync()
         {
             // Arrange
@@ -105,7 +105,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration.Tests
 
         #region Validation Service Statuses
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task GetValidationServiceStatuses_WhenKeyAndDataExist_ReturnsExpectedValue()
         {
             // Arrange
@@ -130,7 +130,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration.Tests
             Mock.Get(_mockReader).VerifyAll();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         [DataRow(null)]
         [DataRow("String_NotDeserialisable")]
         public void GetValidationServiceStatuses_WhenKeyOrDataDoNotExist_RaisesException(string input)
@@ -152,7 +152,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration.Tests
             Mock.Get(_mockReader).VerifyAll();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task SetValidationServiceStatuses_ObjectIsPersisted()
         {
             // Arrange
@@ -181,7 +181,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration.Tests
 
         #region Validation Funding Types
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task GetValidationServiceFundingTypes_WhenKeyAndDataExist_ReturnsExpectedValue()
         {
             // Arrange
@@ -207,7 +207,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration.Tests
             Mock.Get(_mockReader).VerifyAll();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         [DataRow(null)]
         [DataRow("String_NotDeserialisable")]
         public void GetValidationServiceFundingTypes_WhenKeyOrDataDoNotExist_RaisesException(string input)
@@ -229,7 +229,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration.Tests
             Mock.Get(_mockReader).VerifyAll();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task SetValidationServiceFundingTypes_ObjectIsPersisted()
         {
             // Arrange

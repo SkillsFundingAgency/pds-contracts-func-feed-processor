@@ -42,7 +42,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
         #region Constructor
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void Constructor_EnsureSchemaFile_IsLoaded()
         {
             // Arrange
@@ -57,7 +57,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             act.Should().NotThrow();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void Constructor_OnSchemaFileLoadError_MessageIsLogged_But_ProcessDoesNotAbort()
         {
             // Arrange
@@ -74,7 +74,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             act.Should().NotThrow();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void Constructor_OnSchemaVersionMismatch_MessageIsLogged_But_ProcessDoesNotAbort()
         {
             // Arrange
@@ -93,7 +93,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
         #region ValidateXmlWithSchema
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void ValidateXMLWithSchema_MissingSchemaFile_BypassesSchemaValidation()
         {
             // Arrange
@@ -208,7 +208,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("CCF")]
         [DataRow("FECA")]
         [DataRow("19TRN2020")]
-        [TestMethod]
+        [DataRow("AEB2021")]
+        [TestMethod, TestCategory("Unit")]
         public async Task ValidateFundingTypeAsync_CorrectFundingType_ReturnsTrue(string fundingType)
         {
             // Arrange
@@ -225,7 +226,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Verify_All();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ValidateFundingTypeAsync_InvalidFundingType_ReturnsFalse()
         {
             // Arrange
@@ -245,7 +246,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Verify_All();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ValidateFundingTypeAsync_MissingConfiguration_UsesDefault()
         {
             // Arrange
@@ -299,7 +300,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("Withdrawn", "Withdrawn By Agency", "Variation")]
         [DataRow("Withdrawn", "Withdrawn By Provider", "None")]
         [DataRow("Withdrawn", "Withdrawn By Provider", "Variation")]
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ValidateContractStatusAsync_ValidStatuses_ReturnsTrue(string parentStatus, string contractStatus, string amendmentType)
         {
             // Arrange
@@ -332,7 +333,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("cLosed", "Terminated", "None")]
         [DataRow("cLosed", "Terminated", "Variation")]
         [DataRow("cLosed", "Terminated", "Notification")]
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ValidateContractStatusAsync_InvalidStatuses_ReturnsFalse(string parentStatus, string contractStatus, string amendmentType)
         {
             // Arrange
@@ -350,7 +351,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Verify_All();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ValidateContractStatusAsync_InvalidParentStatus_ReturnFalse()
         {
             // Arrange
@@ -372,7 +373,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Verify_All();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ValidateContractStatusAsync_InvalidContractStatus_ReturnFalse()
         {
             // Arrange
@@ -394,7 +395,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Verify_All();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ValidateContractStatusAsync_InvalidAmendmentType_ReturnsFalse()
         {
             // Arrange
@@ -416,7 +417,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Verify_All();
         }
 
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task ValidateContractStatusAsync_MissingConfiguration_UsesDefault()
         {
             // Arrange
@@ -550,7 +551,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 "dada",
                 "ccf",
                 "feca",
-                "19trn2020"
+                "19trn2020",
+                "aeb2021"
             };
 
         #endregion

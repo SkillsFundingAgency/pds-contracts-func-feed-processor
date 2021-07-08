@@ -14,7 +14,7 @@ namespace Pds.Contracts.FeedProcessor.Func.Tests.Unit
     [TestClass, TestCategory("Unit")]
     public class FcsContractEventFeedReaderTimerFunctionTests
     {
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public void RunAsyncTest()
         {
             // Arrange

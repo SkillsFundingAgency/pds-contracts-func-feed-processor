@@ -206,7 +206,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "dada",
                 "ccf",
                 "feca",
-                "19trn2020"
+                "19trn2020",
+                "aeb2021"
             };
 
         #endregion

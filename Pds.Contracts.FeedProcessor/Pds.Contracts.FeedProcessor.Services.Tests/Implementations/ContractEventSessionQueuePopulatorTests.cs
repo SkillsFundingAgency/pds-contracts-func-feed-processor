@@ -14,7 +14,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations.Tests
     [TestClass, TestCategory("Unit")]
     public class ContractEventSessionQueuePopulatorTests
     {
-        [TestMethod]
+        [TestMethod, TestCategory("Unit")]
         public async Task PopulateSessionQueueTestAsync()
         {
             // Arrange
