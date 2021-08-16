@@ -207,7 +207,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "ccf",
                 "feca",
                 "19trn2020",
-                "aeb2021"
+                "aeb2021",
+                "hte-pgf"
             };
 
         #endregion
