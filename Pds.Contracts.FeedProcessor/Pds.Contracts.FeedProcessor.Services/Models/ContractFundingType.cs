@@ -152,6 +152,12 @@ namespace Pds.Contracts.FeedProcessor.Services.Models
         /// Adult Education Budget (Contract for Service)
         /// </summary>
         [Display(Name = "Adult Education Budget (Contract for Service)", Description = "Adult Education Budget (Contract for Service)")]
-        AdultEducationBudgetContractForService = 23
+        AdultEducationBudgetContractForService = 23,
+
+        /// <summary>
+        /// Higher technical education provider growth fund contract
+        /// </summary>
+        [Display(Name = "Higher technical education provider growth fund", Description = "Higher technical education provider growth fund")]
+        HigherTechnicalEducation = 24
     }
 }
