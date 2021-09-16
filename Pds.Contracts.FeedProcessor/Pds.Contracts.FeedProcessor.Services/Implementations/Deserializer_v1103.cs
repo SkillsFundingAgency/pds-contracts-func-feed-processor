@@ -212,6 +212,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "aeb2021" => ContractFundingType.AdultEducationBudgetContractForService,
                 "hte-pgf" => ContractFundingType.HigherTechnicalEducation,
                 "sadf" => ContractFundingType.SkillsAcceleratorDevelopmentFund,
+                "fe-pdgp" => ContractFundingType.FurtherEducationProfessionalDevelopmentGrant,
 
                 _ => ContractFundingType.Unknown
             };

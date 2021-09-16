@@ -164,6 +164,12 @@ namespace Pds.Contracts.FeedProcessor.Services.Models
         /// Skills accelerator development fund
         /// </summary>
         [Display(Name = "Skills accelerator development fund", Description = "Skills accelerator development fund")]
-        SkillsAcceleratorDevelopmentFund = 25
+        SkillsAcceleratorDevelopmentFund = 25,
+
+        /// <summary>
+        /// Skills accelerator development fund
+        /// </summary>
+        [Display(Name = "Further education professional development grants", Description = "Further education professional development grants")]
+        FurtherEducationProfessionalDevelopmentGrant = 26
     }
 }
