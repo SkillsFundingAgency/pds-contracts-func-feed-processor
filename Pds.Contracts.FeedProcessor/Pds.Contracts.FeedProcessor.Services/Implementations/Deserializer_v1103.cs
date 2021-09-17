@@ -211,6 +211,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "19trn2020" => ContractFundingType.ProcuredNineteenToTwentyFourTraineeship,
                 "aeb2021" => ContractFundingType.AdultEducationBudgetContractForService,
                 "hte-pgf" => ContractFundingType.HigherTechnicalEducation,
+                "sadf" => ContractFundingType.SkillsAcceleratorDevelopmentFund,
+                "fe-pdgp" => ContractFundingType.FurtherEducationProfessionalDevelopmentGrant,
 
                 _ => ContractFundingType.Unknown
             };
