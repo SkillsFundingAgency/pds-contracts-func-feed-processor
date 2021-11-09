@@ -111,7 +111,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration.Tests
             // Arrange
             var expected = new ValidationServiceConfigurationStatusesCollection()
             {
-                new ValidationServiceConfigurationStatuses() {AmendmentType = "a", ContractStatus = "b", ParentContractStatus = "c" }
+                new ValidationServiceConfigurationStatuses() { AmendmentType = "a", ContractStatus = "b", ParentContractStatus = "c" }
             };
 
             var configString = JsonConvert.SerializeObject(expected);
@@ -158,7 +158,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Configuration.Tests
             // Arrange
             var data = new ValidationServiceConfigurationStatusesCollection()
             {
-                new ValidationServiceConfigurationStatuses() {AmendmentType = "a", ContractStatus = "b", ParentContractStatus = "c" }
+                new ValidationServiceConfigurationStatuses() { AmendmentType = "a", ContractStatus = "b", ParentContractStatus = "c" }
             };
 
             var expected = JsonConvert.SerializeObject(data);

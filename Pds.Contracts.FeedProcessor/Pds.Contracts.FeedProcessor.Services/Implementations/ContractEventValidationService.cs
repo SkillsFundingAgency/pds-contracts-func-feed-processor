@@ -38,9 +38,9 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             _configReader = configReader;
             _logger = logger;
 
-            if (_options.SchemaVersion == "11_03")
+            if (_options.SchemaVersion == "11_04")
             {
-                _logger.LogInformation($"[{nameof(ContractEventValidationService)}] Loading schema version 11.03.");
+                _logger.LogInformation($"[{nameof(ContractEventValidationService)}] Loading schema version 11.04.");
                 _xmlSchema = ReadSchemaFile(_options.SchemaManifestFilename);
             }
             else
