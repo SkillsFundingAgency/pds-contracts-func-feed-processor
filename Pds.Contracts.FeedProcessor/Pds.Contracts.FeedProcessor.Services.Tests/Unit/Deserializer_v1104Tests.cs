@@ -16,7 +16,7 @@ using System.Xml.Schema;
 
 namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 {
-    [TestClass, TestCategory("Unit")]
+    [TestClass, Ignore, TestCategory("Unit")]
     public class Deserializer_v1104Tests
     {
         private const string _partialXmlDocument = "ESIF-9999-v5-Partial.xml";

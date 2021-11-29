@@ -50,7 +50,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             var contractList = new List<ContractProcessResult>();
 
             // Ensure xml is valid.
-            var document = _validationService.ValidateXmlWithSchema(xml);
+            //var document = _validationService.ValidateXmlWithSchema(xml);
+            var document = LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
             ns.AddNamespace("c", _contractEvent_Namespace);
@@ -72,6 +73,18 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
 
             _loggerAdapter.LogInformation($"[{nameof(Deserializer_v1104)}.{nameof(DeserializeAsync)}] - Deserialistion completed.");
             return contractList;
+        }
+
+        /// <summary>
+        /// Load XML document with no validation.
+        /// </summary>
+        /// <param name="contents">Content to be loaded.</param>
+        /// <returns>An XML document.</returns>
+        private XmlDocument LoadXml(string contents)
+        {
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.LoadXml(contents);
+            return xmlDocument;
         }
 
         private async Task<ContractProcessResultType> GetProcessedResultType(XmlElement feedItem, XmlNamespaceManager ns, ContractEvent evt)
