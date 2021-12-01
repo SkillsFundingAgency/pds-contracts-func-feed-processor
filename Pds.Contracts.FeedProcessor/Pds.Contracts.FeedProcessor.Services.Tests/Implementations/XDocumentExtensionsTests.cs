@@ -35,6 +35,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Implementations
             document.LowerCaseAllElementNames();
 
             var result = document.ToString();
+
             // Assert
             result.Should().Be(expectedString);
         }

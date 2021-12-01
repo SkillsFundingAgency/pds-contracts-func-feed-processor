@@ -25,7 +25,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         private const string _partialXmlDocument = "ESIF-9999-v5-Partial.xml";
 
         private readonly SchemaValidationSettings _validationSettings = new SchemaValidationSettings();
-        private readonly string _baseDirectory = AppDomain.CurrentDomain.BaseDirectory + "/Documents/11_03/";
+        private readonly string _baseDirectory = AppDomain.CurrentDomain.BaseDirectory + "/Documents/11_04/";
 
         private readonly ILoggerAdapter<ContractEventValidationService> _logger
             = Mock.Of<ILoggerAdapter<ContractEventValidationService>>(MockBehavior.Strict);
@@ -35,8 +35,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
         public ContractEventValidationServiceTests()
         {
-            _validationSettings.SchemaVersion = "11_03";
-            _validationSettings.SchemaManifestFilename = "contract_corporate_schema_v11.03.xsd";
+            _validationSettings.SchemaVersion = "11_04";
+            _validationSettings.SchemaManifestFilename = "contract_corporate_schema_v11.04.xsd";
             _validationSettings.EnableSchemaVersionValidation = true;
         }
 
@@ -103,7 +103,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             XmlDocument expected = new XmlDocument();
             expected.LoadXml(fileContents);
 
-            _validationSettings.SchemaVersion = "11_03";
+            _validationSettings.SchemaVersion = "11_04";
             _validationSettings.SchemaManifestFilename = "none-existant-file.xsd";
 
             ILoggerAdapter_Setup_LogInformation();
@@ -137,8 +137,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             var result = service.ValidateXmlWithSchema(fileContents);
 
             // Assert
-            //result.Should().BeTrue("Because the schema version validation is turned off.");
 
+            //result.Should().BeTrue("Because the schema version validation is turned off.");
             Assert.Fail("Need to compare xml documents");
             Verify_All();
         }

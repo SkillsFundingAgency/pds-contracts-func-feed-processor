@@ -38,9 +38,9 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             _configReader = configReader;
             _logger = logger;
 
-            if (_options.SchemaVersion == "11_03")
+            if (_options.SchemaVersion == "11_04")
             {
-                _logger.LogInformation($"[{nameof(ContractEventValidationService)}] Loading schema version 11.03.");
+                _logger.LogInformation($"[{nameof(ContractEventValidationService)}] Loading schema version 11.04.");
                 _xmlSchema = ReadSchemaFile(_options.SchemaManifestFilename);
             }
             else
@@ -112,14 +112,14 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                     // Schema file is not accessible or not found.
                     // The schema file may not be present if the code is being downloaded from github.
                     // The file should always be present in Azure.
-                    _logger.LogWarning($"[{nameof(ValidateXmlWithSchema)}] XML validation failed - Embeded schema file not found.");
+                    _logger.LogWarning($"[{nameof(ValidateXmlWithSchema)}] XML validation failed - Embedded schema file not found.");
                 }
 
                 return xmlDocument;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "One or more errors occurred during schema validation.");
+                _logger.LogError(ex, $"One or more errors occurred during schema validation. {ex.Message}");
                 throw;
             }
         }
@@ -244,11 +244,9 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
 
         private void XmlValidationEventHandler(object send, ValidationEventArgs e)
         {
-            if (_options.EnableSchemaVersionValidation == false && e.Message == "The required attribute 'schemaVersion' is missing.")
+            if (_options.EnableSchemaVersionValidation == false)
             {
-                // Mock feed does not support the schemaVersion attribute
-                // surpress schema version validatione error
-                _logger.LogWarning(e.Exception, $"[{nameof(ValidateXmlWithSchema)}] schema version element is missing but the error has been surpressed.");
+                _logger.LogWarning(e.Exception, $"[{nameof(ValidateXmlWithSchema)}] schema validation is turned OFF. Validation message: {e.Message}");
             }
             else
             {

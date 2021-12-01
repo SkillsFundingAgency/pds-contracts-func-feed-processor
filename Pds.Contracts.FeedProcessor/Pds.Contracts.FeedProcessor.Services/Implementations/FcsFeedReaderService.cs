@@ -100,6 +100,5 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
 
             return selfPage;
         }
-
     }
 }
