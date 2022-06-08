@@ -226,7 +226,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "hte-pgf" => ContractFundingType.HigherTechnicalEducation,
                 "sadf" => ContractFundingType.SkillsAcceleratorDevelopmentFund,
                 "fe-pdgp" => ContractFundingType.FurtherEducationProfessionalDevelopmentGrant,
-
+                "sdfii" => ContractFundingType.StrategicDevelopmentFund2,
                 _ => ContractFundingType.Unknown
             };
         }

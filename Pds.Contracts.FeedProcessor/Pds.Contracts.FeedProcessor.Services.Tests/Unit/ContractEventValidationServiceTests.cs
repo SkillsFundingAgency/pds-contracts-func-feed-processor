@@ -212,6 +212,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("HTE-PGF")]
         [DataRow("SADF")]
         [DataRow("FE-PDGP")]
+        [DataRow("SDFII")]
         [TestMethod, TestCategory("Unit")]
         public async Task ValidateFundingTypeAsync_CorrectFundingType_ReturnsTrue(string fundingType)
         {
@@ -558,7 +559,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 "aeb2021",
                 "hte-pgf",
                 "sadf",
-                "fe-pdgp"
+                "fe-pdgp",
+                "sdfii"
             };
 
         #endregion
