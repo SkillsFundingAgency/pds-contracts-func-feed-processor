@@ -210,7 +210,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "aeb2021",
                 "hte-pgf",
                 "sadf",
-                "fe-pdgp"
+                "fe-pdgp",
+                "sdfii"
             };
 
         #endregion
