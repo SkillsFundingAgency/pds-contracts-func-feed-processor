@@ -176,6 +176,12 @@ namespace Pds.Contracts.FeedProcessor.Services.Models
         /// Skills accelerator development fund
         /// </summary>
         [Display(Name = "Strategic Development Fund II", Description = "Strategic Development Fund II")]
-        StrategicDevelopmentFund2 = 27
+        StrategicDevelopmentFund2 = 27,
+
+        /// <summary>
+        /// Skills accelerator development fund
+        /// </summary>
+        [Display(Name = "Skills bootcamps", Description = "Skills bootcamps")]
+        SkillsBootcamps = 28
     }
 }
