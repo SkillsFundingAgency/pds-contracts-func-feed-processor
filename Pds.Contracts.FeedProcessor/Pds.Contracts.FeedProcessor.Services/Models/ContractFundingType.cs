@@ -179,9 +179,15 @@ namespace Pds.Contracts.FeedProcessor.Services.Models
         StrategicDevelopmentFund2 = 27,
 
         /// <summary>
-        /// Skills accelerator development fund
+        /// Skills bootcamps
         /// </summary>
         [Display(Name = "Skills bootcamps", Description = "Skills bootcamps")]
-        SkillsBootcamps = 28
+        SkillsBootcamps = 28,
+
+        /// <summary>
+        /// Multiply
+        /// </summary>
+        [Display(Name = "Multiply", Description = "Multiply Programme")]
+        Multiply = 29
     }
 }

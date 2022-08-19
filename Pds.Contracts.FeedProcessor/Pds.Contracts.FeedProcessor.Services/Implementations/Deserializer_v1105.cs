@@ -228,6 +228,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "fe-pdgp" => ContractFundingType.FurtherEducationProfessionalDevelopmentGrant,
                 "sdfii" => ContractFundingType.StrategicDevelopmentFund2,
                 "sb" => ContractFundingType.SkillsBootcamps,
+                "mult" => ContractFundingType.Multiply,
                 _ => ContractFundingType.Unknown
             };
         }

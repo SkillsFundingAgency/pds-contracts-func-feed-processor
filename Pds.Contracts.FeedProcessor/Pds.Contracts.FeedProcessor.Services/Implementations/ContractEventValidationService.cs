@@ -212,7 +212,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "sadf",
                 "fe-pdgp",
                 "sdfii",
-                "sb"
+                "sb",
+                "mult"
             };
 
         #endregion
