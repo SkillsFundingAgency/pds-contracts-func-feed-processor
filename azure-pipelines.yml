@@ -28,6 +28,12 @@ jobs:
     displayName: 'Download contract_corporate_schema_v11.04.xsd'
     inputs:
       secureFile: contract_corporate_schema_v11.04.xsd
+
+  - task: DownloadSecureFile@1
+    name: downloadSchemaV1105
+    displayName: 'Download contract_corporate_schema_v11.05.xsd'
+    inputs:
+      secureFile: contract_corporate_schema_v11.05.xsd
   
 
   - task: PowerShell@2
@@ -57,6 +63,19 @@ jobs:
 
           Copy-Item -Path "$(downloadSchemaV1104.secureFilePath)" -Destination "$sourceDestination\contract_corporate_schema_v11.04.xsd"
           Write-Host "File copied!"
+
+          Write-Host "Copying schema 11_05 to destination directory"
+          $sourceDestination = "$(System.DefaultWorkingDirectory)\Pds.Contracts.FeedProcessor\Pds.Contracts.FeedProcessor.Services\Schema\11_05"
+
+          Write-Host "Copying schema file from $(downloadSchemaV1105.secureFilePath) to target '$sourceDestination\contract_corporate_schema_v11.05.xsd'"
+
+          if(-not (Test-Path -Path "$sourceDestination")) {
+            New-Item -Type Directory -Path "$sourceDestination"
+          }
+
+          Copy-Item -Path "$(downloadSchemaV1105.secureFilePath)" -Destination "$sourceDestination\contract_corporate_schema_v11.05.xsd"
+          Write-Host "File copied!"
+
 
   - task: UseDotNet@2
     displayName: Select dotnet core 3.1.x
