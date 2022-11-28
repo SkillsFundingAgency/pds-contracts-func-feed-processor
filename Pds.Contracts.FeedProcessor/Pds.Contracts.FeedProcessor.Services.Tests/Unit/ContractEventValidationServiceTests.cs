@@ -215,6 +215,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("SDFII")]
         [DataRow("SB")]
         [DataRow("MULT")]
+        [DataRow("FE-ACA")]
         [TestMethod, TestCategory("Unit")]
         public async Task ValidateFundingTypeAsync_CorrectFundingType_ReturnsTrue(string fundingType)
         {
@@ -564,7 +565,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 "fe-pdgp",
                 "sdfii",
                 "sb",
-                "mult"
+                "mult",
+                "fe-aca"
             };
 
         #endregion

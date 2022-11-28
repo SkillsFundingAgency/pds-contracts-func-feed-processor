@@ -188,6 +188,12 @@ namespace Pds.Contracts.FeedProcessor.Services.Models
         /// Multiply
         /// </summary>
         [Display(Name = "Multiply", Description = "Multiply Programme")]
-        Multiply = 29
+        Multiply = 29,
+
+        /// <summary>
+        /// Additional capital allocations.
+        /// </summary>
+        [Display(Name = "Additional capital allocations", Description = "Additional capital allocations")]
+        AdditionalCapitalAllocations = 30
     }
 }
