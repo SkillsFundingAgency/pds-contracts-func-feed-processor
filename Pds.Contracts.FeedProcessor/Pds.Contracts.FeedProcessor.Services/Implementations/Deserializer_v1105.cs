@@ -229,6 +229,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "sdfii" => ContractFundingType.StrategicDevelopmentFund2,
                 "sb" => ContractFundingType.SkillsBootcamps,
                 "mult" => ContractFundingType.Multiply,
+                "fe-aca" => ContractFundingType.AdditionalCapitalAllocations,
                 _ => ContractFundingType.Unknown
             };
         }
