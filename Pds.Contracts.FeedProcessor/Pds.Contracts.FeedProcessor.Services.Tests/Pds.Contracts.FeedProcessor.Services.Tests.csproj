@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Documents\11_05\ESIF-9999-v5-Partial.xml">
+    <None Update="Documents\11_06\ESIF-9999-v5-Partial.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="local.settings.json">

@@ -25,7 +25,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         private const string _partialXmlDocument = "ESIF-9999-v5-Partial.xml";
 
         private readonly SchemaValidationSettings _validationSettings = new SchemaValidationSettings();
-        private readonly string _baseDirectory = AppDomain.CurrentDomain.BaseDirectory + "/Documents/11_05/";
+        private readonly string _baseDirectory = AppDomain.CurrentDomain.BaseDirectory + "/Documents/11_06/";
 
         private readonly ILoggerAdapter<ContractEventValidationService> _logger
             = Mock.Of<ILoggerAdapter<ContractEventValidationService>>(MockBehavior.Strict);
@@ -35,8 +35,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
         public ContractEventValidationServiceTests()
         {
-            _validationSettings.SchemaVersion = "11_05";
-            _validationSettings.SchemaManifestFilename = "contract_corporate_schema_v11.05.xsd";
+            _validationSettings.SchemaVersion = "11_06";
+            _validationSettings.SchemaManifestFilename = "contract_corporate_schema_v11.06.xsd";
             _validationSettings.EnableSchemaVersionValidation = true;
         }
 
@@ -103,7 +103,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             XmlDocument expected = new XmlDocument();
             expected.LoadXml(fileContents);
 
-            _validationSettings.SchemaVersion = "11_05";
+            _validationSettings.SchemaVersion = "11_06";
             _validationSettings.SchemaManifestFilename = "none-existant-file.xsd";
 
             ILoggerAdapter_Setup_LogInformation();
@@ -216,6 +216,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("SB")]
         [DataRow("MULT")]
         [DataRow("FE-ACA")]
+        [DataRow("HTE-SIF")]
         [TestMethod, TestCategory("Unit")]
         public async Task ValidateFundingTypeAsync_CorrectFundingType_ReturnsTrue(string fundingType)
         {
@@ -566,7 +567,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 "sdfii",
                 "sb",
                 "mult",
-                "fe-aca"
+                "fe-aca",
+                "hte-sif"
             };
 
         #endregion
