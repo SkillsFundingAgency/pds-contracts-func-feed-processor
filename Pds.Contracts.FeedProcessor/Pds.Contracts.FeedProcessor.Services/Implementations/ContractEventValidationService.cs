@@ -38,9 +38,9 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             _configReader = configReader;
             _logger = logger;
 
-            if (_options.SchemaVersion == "11_05")
+            if (_options.SchemaVersion == "11_06")
             {
-                _logger.LogInformation($"[{nameof(ContractEventValidationService)}] Loading schema version 11.05.");
+                _logger.LogInformation($"[{nameof(ContractEventValidationService)}] Loading schema version 11.06.");
                 _xmlSchema = ReadSchemaFile(_options.SchemaManifestFilename);
             }
             else
@@ -214,7 +214,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "sdfii",
                 "sb",
                 "mult",
-                "fe-aca"
+                "fe-aca",
+                "hte-sif"
             };
 
         #endregion

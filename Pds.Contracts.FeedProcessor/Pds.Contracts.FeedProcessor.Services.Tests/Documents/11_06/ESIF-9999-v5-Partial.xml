@@ -6,7 +6,7 @@
   <updated>2021-01-02T01:01:01Z</updated>
   <category term="Contract Published to Provider" label="A contract has been Published to Provider" />
   <content type="application/vnd.sfa.contract.v1+atom+xml">
-    <contract schemaVersion="11.03" xmlns="urn:sfa:schemas:contract" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <contract schemaVersion="11.06" xmlns="urn:sfa:schemas:contract" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
       <contracts>
         <contract>
           <fundingType>
