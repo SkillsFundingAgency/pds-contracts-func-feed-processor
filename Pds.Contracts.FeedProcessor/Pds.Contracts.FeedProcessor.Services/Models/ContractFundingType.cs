@@ -201,5 +201,11 @@ namespace Pds.Contracts.FeedProcessor.Services.Models
         /// </summary>
         [Display(Name = "Higher technical education skills injection fund", Description = "Higher technical education skills injection fund")]
         HigherTechnicalEducationSkillsInjectionFund = 31,
+
+        /// <summary>
+        /// FE Reclassification Capital Allocation.
+        /// </summary>
+        [Display(Name = "FE Reclassification Capital Allocation", Description = "FE Reclassification Capital Allocation")]
+        FEReclassificationCapitalAllocation = 32,
     }
 }
