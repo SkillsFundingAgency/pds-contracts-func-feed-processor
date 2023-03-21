@@ -415,7 +415,9 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("sb", ContractFundingType.SkillsBootcamps)]
         [DataRow("mult", ContractFundingType.Multiply)]
         [DataRow("fe-aca", ContractFundingType.AdditionalCapitalAllocations)]
-        [DataRow("fe-aca", ContractFundingType.HigherTechnicalEducationSkillsInjectionFund)]
+        [DataRow("hte-sif", ContractFundingType.HigherTechnicalEducationSkillsInjectionFund)]
+        [DataRow("fe-rca", ContractFundingType.FEReclassificationCapitalAllocation)]
+
         [DataRow("SomeOtherValue", ContractFundingType.Unknown)]
         [TestMethod, TestCategory("Unit")]
         public async Task Deserilize_PartialXML_ValidateFundingTypeEnum_ReturnsExpectedResult(string fundingType, ContractFundingType expectedType)

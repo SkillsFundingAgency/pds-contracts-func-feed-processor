@@ -231,6 +231,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "mult" => ContractFundingType.Multiply,
                 "fe-aca" => ContractFundingType.AdditionalCapitalAllocations,
                 "hte-sif" => ContractFundingType.HigherTechnicalEducationSkillsInjectionFund,
+                "fe-rca" => ContractFundingType.FEReclassificationCapitalAllocation,
                 _ => ContractFundingType.Unknown
             };
         }
