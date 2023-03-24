@@ -207,5 +207,12 @@ namespace Pds.Contracts.FeedProcessor.Services.Models
         /// </summary>
         [Display(Name = "FE Reclassification Capital Allocation", Description = "FE Reclassification Capital Allocation")]
         FEReclassificationCapitalAllocation = 32,
+
+
+        /// <summary>
+        /// FE Capital Transformation Fund Allocation.
+        /// </summary>
+        [Display(Name = "FE Capital Transformation Fund Allocation", Description = "FE Capital Transformation Fund Allocation")]
+        FECapitalTransformationFundAllocation = 33,
     }
 }

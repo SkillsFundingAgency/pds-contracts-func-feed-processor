@@ -217,6 +217,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "fe-aca",
                 "hte-sif",
                 "fe-rca",
+                "fe-ctf",
             };
 
         #endregion
