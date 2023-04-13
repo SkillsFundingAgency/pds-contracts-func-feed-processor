@@ -570,7 +570,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 "mult",
                 "fe-aca",
                 "hte-sif",
-                "fe-rca"
+                "fe-rca",
+                "fe-ctf"
             };
 
         #endregion

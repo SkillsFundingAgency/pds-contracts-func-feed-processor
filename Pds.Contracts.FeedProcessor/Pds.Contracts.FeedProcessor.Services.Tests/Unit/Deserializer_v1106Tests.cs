@@ -417,6 +417,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("fe-aca", ContractFundingType.AdditionalCapitalAllocations)]
         [DataRow("hte-sif", ContractFundingType.HigherTechnicalEducationSkillsInjectionFund)]
         [DataRow("fe-rca", ContractFundingType.FEReclassificationCapitalAllocation)]
+        [DataRow("fe-rca", ContractFundingType.FECapitalTransformationFundAllocation)]
 
         [DataRow("SomeOtherValue", ContractFundingType.Unknown)]
         [TestMethod, TestCategory("Unit")]
