@@ -233,6 +233,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "hte-sif" => ContractFundingType.HigherTechnicalEducationSkillsInjectionFund,
                 "fe-rca" => ContractFundingType.FEReclassificationCapitalAllocation,
                 "fe-ctf" => ContractFundingType.FECapitalTransformationFundAllocation,
+                "aeb2023" => ContractFundingType.AdultEducationBudgetProcured2023,
                 _ => ContractFundingType.Unknown
             };
         }
