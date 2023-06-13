@@ -214,5 +214,11 @@ namespace Pds.Contracts.FeedProcessor.Services.Models
         /// </summary>
         [Display(Name = "FE Capital Transformation Fund Allocation", Description = "FE Capital Transformation Fund Allocation")]
         FECapitalTransformationFundAllocation = 33,
+
+        /// <summary>
+        /// ESFA Adult Education Budget (procured from Aug 2023).
+        /// </summary>
+        [Display(Name = "ESFA Adult Education Budget (procured from Aug 2023)", Description = "ESFA Adult Education Budget (procured from Aug 2023)")]
+        AdultEducationBudgetProcured2023 = 34
     }
 }
