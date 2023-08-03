@@ -50,8 +50,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             var contractList = new List<ContractProcessResult>();
 
             // Ensure xml is valid.
-            //var document = _validationService.ValidateXmlWithSchema(xml);
-            var document = LoadXml(xml);
+            var document = _validationService.ValidateXmlWithSchema(xml);
+            document = LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
             ns.AddNamespace("c", _contractEvent_Namespace);
@@ -234,6 +234,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "fe-rca" => ContractFundingType.FEReclassificationCapitalAllocation,
                 "fe-ctf" => ContractFundingType.FECapitalTransformationFundAllocation,
                 "aeb2023" => ContractFundingType.AdultEducationBudgetProcured2023,
+                "sbd" => ContractFundingType.SkillsBootcampsDPS,
                 _ => ContractFundingType.Unknown
             };
         }

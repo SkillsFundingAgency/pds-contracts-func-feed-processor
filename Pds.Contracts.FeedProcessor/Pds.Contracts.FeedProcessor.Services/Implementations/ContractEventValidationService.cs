@@ -218,7 +218,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "hte-sif",
                 "fe-rca",
                 "fe-ctf",
-                "aeb2023"
+                "aeb2023",
+                "sbd"
             };
 
         #endregion

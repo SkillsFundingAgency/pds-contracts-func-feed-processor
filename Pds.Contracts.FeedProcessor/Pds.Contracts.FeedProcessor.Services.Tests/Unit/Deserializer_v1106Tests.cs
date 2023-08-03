@@ -16,7 +16,7 @@ using System.Xml.Schema;
 
 namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 {
-    [TestClass, Ignore, TestCategory("Unit")]
+    [TestClass, TestCategory("Unit")]
     public class Deserializer_v1106Tests
     {
         private const string _partialXmlDocument = "ESIF-9999-v5-Partial.xml";
@@ -37,7 +37,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         #region Base Result
 
         [TestMethod, TestCategory("Unit")]
-        public async Task Deserilize_ReturnsExpected()
+        public async Task Deserialize_ReturnsExpected()
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -66,7 +66,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         #region Validation Errors
 
         [TestMethod, TestCategory("Unit")]
-        public void Deserilize_SchemaValidationError_RaisesException()
+        public void Deserialize_SchemaValidationError_RaisesException()
         {
             // Arrange
             var xml = "<some>input</some>";
@@ -89,7 +89,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         }
 
         [TestMethod, TestCategory("Unit")]
-        public async Task Deserilize_StatusValidationFailure_ReturnsErrorResult()
+        public async Task Deserialize_StatusValidationFailure_ReturnsErrorResult()
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -118,7 +118,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         }
 
         [TestMethod, TestCategory("Unit")]
-        public async Task Deserilize_FundingTypeValidationFailure_ReturnsErrorResult()
+        public async Task Deserialize_FundingTypeValidationFailure_ReturnsErrorResult()
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -153,7 +153,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         #region Nullable values
 
         [TestMethod, TestCategory("Unit")]
-        public void Deserilize_NullUKPRN_RaisesException()
+        public void Deserialize_NullUKPRN_RaisesException()
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -165,6 +165,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
             var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:contractor/c:ukprn", ns);
             node.ParentNode.RemoveChild(node);
+
+            xml = SaveXMLChangesToXmlString(document);
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
@@ -182,7 +184,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         }
 
         [TestMethod, TestCategory("Unit")]
-        public void Deserilize_MissingParentContractNumber_RaisesException()
+        public void Deserialize_MissingParentContractNumber_RaisesException()
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -194,6 +196,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
             var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:parentContractNumber", ns);
             node.ParentNode.RemoveChild(node);
+
+            xml = SaveXMLChangesToXmlString(document);
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
@@ -211,7 +215,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         }
 
         [TestMethod, TestCategory("Unit")]
-        public void Deserilize_MissingFundingStreamPeriodCode_ShouldNotRaiseException()
+        public void Deserialize_MissingFundingStreamPeriodCode_ShouldNotRaiseException()
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -239,7 +243,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         }
 
         [TestMethod, TestCategory("Unit")]
-        public void Deserilize_Missing_ContractAllocationNumber_ShouldNotRaiseException()
+        public void Deserialize_Missing_ContractAllocationNumber_ShouldNotRaiseException()
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -267,7 +271,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         }
 
         [TestMethod, TestCategory("Unit")]
-        public async Task Deserilize_MissingStartDate_ReturnsNullStartDate()
+        public async Task Deserialize_MissingStartDate_ReturnsNullStartDate()
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -279,6 +283,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
             var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:startDate", ns);
             node.ParentNode.RemoveChild(node);
+
+            xml = SaveXMLChangesToXmlString(document);
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
@@ -298,7 +304,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         }
 
         [TestMethod, TestCategory("Unit")]
-        public async Task Deserilize_MissingEndDate_ReturnsNullEndDate()
+        public async Task Deserialize_MissingEndDate_ReturnsNullEndDate()
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -310,6 +316,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
             var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:endDate", ns);
             node.ParentNode.RemoveChild(node);
+
+            xml = SaveXMLChangesToXmlString(document);
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
@@ -329,7 +337,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         }
 
         [TestMethod, TestCategory("Unit")]
-        public async Task Deserilize_MissingApprovalDate_ReturnsNullSignedOnDate()
+        public async Task Deserialize_MissingApprovalDate_ReturnsNullSignedOnDate()
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -341,6 +349,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
             var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:ContractApprovalDate", ns);
             node.ParentNode.RemoveChild(node);
+
+            xml = SaveXMLChangesToXmlString(document);
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
@@ -364,7 +374,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         #region XML Samples
 
         [TestMethod, TestCategory("Unit")]
-        public async Task Deserilize_PartialXML_ReturnsExpectedResult()
+        public async Task Deserialize_PartialXML_ReturnsExpectedResult()
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -388,7 +398,6 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             Verify_All();
         }
 
-        [DataRow("", ContractFundingType.Unknown)]
         [DataRow("main", ContractFundingType.Mainstream)]
         [DataRow("esf", ContractFundingType.Esf)]
         [DataRow("24+loans", ContractFundingType.TwentyFourPlusLoan)]
@@ -417,11 +426,12 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("fe-aca", ContractFundingType.AdditionalCapitalAllocations)]
         [DataRow("hte-sif", ContractFundingType.HigherTechnicalEducationSkillsInjectionFund)]
         [DataRow("fe-rca", ContractFundingType.FEReclassificationCapitalAllocation)]
-        [DataRow("fe-rca", ContractFundingType.FECapitalTransformationFundAllocation)]
+        [DataRow("fe-ctf", ContractFundingType.FECapitalTransformationFundAllocation)]
         [DataRow("aeb2023", ContractFundingType.AdultEducationBudgetProcured2023)]
+        [DataRow("sbd", ContractFundingType.SkillsBootcampsDPS)]
         [DataRow("SomeOtherValue", ContractFundingType.Unknown)]
         [TestMethod, TestCategory("Unit")]
-        public async Task Deserilize_PartialXML_ValidateFundingTypeEnum_ReturnsExpectedResult(string fundingType, ContractFundingType expectedType)
+        public async Task Deserialize_PartialXML_ValidateFundingTypeEnum_ReturnsExpectedResult(string fundingType, ContractFundingType expectedType)
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -432,6 +442,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             ns.AddNamespace("c", Deserializer_v1106._contractEvent_Namespace);
 
             document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:fundingType/c:fundingTypeCode", ns).InnerText = fundingType;
+
+            xml = SaveXMLChangesToXmlString(document);
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
@@ -449,14 +461,14 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             // Assert
             actual.Should().BeEquivalentTo(expected, "Because the input XML has all required fields.");
             Verify_All();
-        }
+        }        
 
         [DataRow("Draft", ContractParentStatus.Draft)]
         [DataRow("Approved", ContractParentStatus.Approved)]
         [DataRow("Withdrawn", ContractParentStatus.Withdrawn)]
         [DataRow("Closed", ContractParentStatus.Closed)]
         [TestMethod, TestCategory("Unit")]
-        public async Task Deserilize_PartialXML_ValidateParentContractEnum_ReturnsExpectedResult(string parentStatus, ContractParentStatus expectedParentStatus)
+        public async Task Deserialize_PartialXML_ValidateParentContractEnum_ReturnsExpectedResult(string parentStatus, ContractParentStatus expectedParentStatus)
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -467,6 +479,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             ns.AddNamespace("c", Deserializer_v1106._contractEvent_Namespace);
 
             document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:contractStatus/c:parentStatus", ns).InnerText = parentStatus;
+
+            xml = SaveXMLChangesToXmlString(document);
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
@@ -499,7 +513,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("terminated", ContractStatus.Terminated)]
         [DataRow("modified", ContractStatus.Modified)]
         [TestMethod, TestCategory("Unit")]
-        public async Task Deserilize_PartialXML_ValidateContractStatusEnum_ReturnsExpectedResult(string contractStatus, ContractStatus expectedStatus)
+        public async Task Deserialize_PartialXML_ValidateContractStatusEnum_ReturnsExpectedResult(string contractStatus, ContractStatus expectedStatus)
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -510,6 +524,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             ns.AddNamespace("c", Deserializer_v1106._contractEvent_Namespace);
 
             document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:contractStatus/c:status", ns).InnerText = contractStatus;
+
+            xml = SaveXMLChangesToXmlString(document);
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
@@ -533,7 +549,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("Variation", ContractAmendmentType.Variation)]
         [DataRow("Notification", ContractAmendmentType.Notification)]
         [TestMethod, TestCategory("Unit")]
-        public async Task Deserilize_PartialXML_ValidateAmendmentTypeEnum_ReturnsExpectedResult(string amendment, ContractAmendmentType expectedAmendment)
+        public async Task Deserialize_PartialXML_ValidateAmendmentTypeEnum_ReturnsExpectedResult(string amendment, ContractAmendmentType expectedAmendment)
         {
             // Arrange
             string xml = LoadPartialXMLFile();
@@ -544,6 +560,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             ns.AddNamespace("c", Deserializer_v1106._contractEvent_Namespace);
 
             document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:amendmentType", ns).InnerText = amendment;
+
+            xml = SaveXMLChangesToXmlString(document);
 
             ILoggerAdapter_SetupLogInformation();
             IContractValidationService_Setup_ValidateContractStatus();
@@ -664,6 +682,14 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 ContractXml = document
             }
         };
+
+        private static string SaveXMLChangesToXmlString(XmlDocument document)
+        {
+            var stringWriter = new StringWriter();
+            var xmlTextWriter = new XmlTextWriter(stringWriter);
+            document.WriteTo(xmlTextWriter);
+            return stringWriter.ToString();
+        }
 
         private Deserializer_v1106 GetDeserializer()
             => new Deserializer_v1106(_validationService, _auditService, _loggerAdapter);
