@@ -11,9 +11,9 @@ using System.Xml;
 namespace Pds.Contracts.FeedProcessor.Services.Implementations
 {
     /// <summary>
-    /// Provides functionality to deserialize a contract conforming to v11.06 schema.
+    /// Provides functionality to deserialize a contract conforming to v11.07 schema.
     /// </summary>
-    public class Deserializer_v1106 : IDeserilizationService<ContractProcessResult>
+    public class Deserializer_v1107 : IDeserilizationService<ContractProcessResult>
     {
         /// <summary>
         /// The xml namespace used by conrtacts.
@@ -24,18 +24,18 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
 
         private readonly IContractEventValidationService _validationService;
         private readonly IAuditService _auditService;
-        private readonly ILoggerAdapter<Deserializer_v1106> _loggerAdapter;
+        private readonly ILoggerAdapter<Deserializer_v1107> _loggerAdapter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Deserializer_v1106"/> class.
+        /// Initializes a new instance of the <see cref="Deserializer_v1107"/> class.
         /// </summary>
         /// <param name="validationService">Service for validation of contract event.</param>
         /// /// <param name="auditService">Service for creating audit entries.</param>
         /// <param name="loggerAdapter">Logger adapter for internal process logging.</param>
-        public Deserializer_v1106(
+        public Deserializer_v1107(
             IContractEventValidationService validationService,
             IAuditService auditService,
-            ILoggerAdapter<Deserializer_v1106> loggerAdapter)
+            ILoggerAdapter<Deserializer_v1107> loggerAdapter)
         {
             _validationService = validationService;
             _auditService = auditService;
@@ -45,7 +45,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
         /// <inheritdoc/>
         public async Task<IList<ContractProcessResult>> DeserializeAsync(string xml)
         {
-            _loggerAdapter.LogInformation($"[{nameof(Deserializer_v1106)}.{nameof(DeserializeAsync)}] - Called to deserilise xml string.");
+            _loggerAdapter.LogInformation($"[{nameof(Deserializer_v1107)}.{nameof(DeserializeAsync)}] - Called to deserilise xml string.");
 
             var contractList = new List<ContractProcessResult>();
 
@@ -71,7 +71,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 });
             }
 
-            _loggerAdapter.LogInformation($"[{nameof(Deserializer_v1106)}.{nameof(DeserializeAsync)}] - Deserialistion completed.");
+            _loggerAdapter.LogInformation($"[{nameof(Deserializer_v1107)}.{nameof(DeserializeAsync)}] - Deserialistion completed.");
             return contractList;
         }
 
@@ -235,6 +235,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "fe-ctf" => ContractFundingType.FECapitalTransformationFundAllocation,
                 "aeb2023" => ContractFundingType.AdultEducationBudgetProcured2023,
                 "sbd" => ContractFundingType.SkillsBootcampsDPS,
+                "hte-sif2" => ContractFundingType.HigherTechnicalEducationSkillsInjectionFund2,
                 _ => ContractFundingType.Unknown
             };
         }

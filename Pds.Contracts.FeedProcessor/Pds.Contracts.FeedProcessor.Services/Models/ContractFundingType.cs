@@ -226,5 +226,11 @@ namespace Pds.Contracts.FeedProcessor.Services.Models
         /// </summary>
         [Display(Name = "Skills bootcamps", Description = "Skills bootcamps dynamic purchasing system (DPS)")]
         SkillsBootcampsDPS = 35,
+
+        /// <summary>
+        /// Higher technical education skills injection fund 2.
+        /// </summary>
+        [Display(Name = "Higher technical education skills injection fund 2", Description = "Higher technical education skills injection fund 2")]
+        HigherTechnicalEducationSkillsInjectionFund2 = 36,
     }
 }

@@ -7,13 +7,14 @@
   <ItemGroup>
     <None Remove="Implementations\FcsFeedReaderService.cs~RF14e0aa8e.TMP" />
     <None Remove="Pds.Contracts.FeedProcessor.Services.csproj.transform" />
-    <None Remove="Schema\11_04\contract_corporate_schema_v11.04.xsd" />
+	<None Remove="Schema\11_04\contract_corporate_schema_v11.04.xsd" />
     <None Remove="Schema\11_05\contract_corporate_schema_v11.05.xsd" />
     <None Remove="Schema\11_06\contract_corporate_schema_v11.06.xsd" />
+    <None Remove="Schema\11_07\contract_corporate_schema_v11.07.xsd" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Schema\11_03\contract_corporate_schema_v11.03.xsd">
+	<EmbeddedResource Include="Schema\11_03\contract_corporate_schema_v11.03.xsd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Schema\11_04\contract_corporate_schema_v11.04.xsd">
@@ -23,6 +24,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Schema\11_06\contract_corporate_schema_v11.06.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>  
+    <EmbeddedResource Include="Schema\11_07\contract_corporate_schema_v11.07.xsd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
