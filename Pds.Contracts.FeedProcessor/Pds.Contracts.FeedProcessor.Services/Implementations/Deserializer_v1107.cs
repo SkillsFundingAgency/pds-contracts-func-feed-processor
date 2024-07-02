@@ -130,7 +130,9 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             var evt = new ContractEvent();
 
             evt.UKPRN = contractElement.GetValue<int>("c:contractor/c:ukprn", ns);
-            evt.ContractNumber = contractElement.GetValue<string>("c:contractNumber", ns);
+
+            var contractNumber = contractElement.GetValue<string>("c:contractNumber", ns);
+            evt.ContractNumber = contractNumber;
 
             evt.ContractVersion = contractElement.GetValue<int>("c:contractVersionNumber", ns);
             evt.ParentContractNumber = contractElement.GetValue<string>("c:parentContractNumber", ns);
@@ -142,7 +144,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             evt.Type = contractElement.GetValue<string>("c:contractType", ns, true);
 
             var fundingType = contractElement.GetValue<string>("c:fundingType/c:fundingTypeCode", ns);
-            evt.FundingType = ParseContractFundingType(fundingType);
+            evt.FundingType = ParseContractFundingType(fundingType, contractNumber);
 
             // Start date can be null
             evt.StartDate = contractElement.GetValue<DateTime?>("c:startDate", ns, true);
@@ -199,7 +201,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             };
         }
 
-        private ContractFundingType ParseContractFundingType(string fundingType)
+        private ContractFundingType ParseContractFundingType(string fundingType, string contractNumber)
         {
             return string.IsNullOrEmpty(fundingType) ? ContractFundingType.Unknown : fundingType.ToLower() switch
             {
@@ -233,11 +235,18 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "hte-sif" => ContractFundingType.HigherTechnicalEducationSkillsInjectionFund,
                 "fe-rca" => ContractFundingType.FEReclassificationCapitalAllocation,
                 "fe-ctf" => ContractFundingType.FECapitalTransformationFundAllocation,
-                "aeb2023" => ContractFundingType.AdultEducationBudgetProcured2023,
+                "aeb2023" => DetermineContractFundingType(contractNumber),
                 "sbd" => ContractFundingType.SkillsBootcampsDPS,
                 "hte-sif2" => ContractFundingType.HigherTechnicalEducationSkillsInjectionFund2,
                 _ => ContractFundingType.Unknown
             };
+        }
+
+        private ContractFundingType DetermineContractFundingType(string contractNumber)
+        {
+            return contractNumber.ToLower().StartsWith("asfp23")
+                ? ContractFundingType.AdultSkillsFundProcured2023
+                : ContractFundingType.AdultEducationBudgetProcured2023;
         }
     }
 }

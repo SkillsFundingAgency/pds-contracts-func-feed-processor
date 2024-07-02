@@ -1,7 +1,7 @@
 <entry>
   <id>uuid:12345678-9abc-def0-1234-123456789123</id>
-  <title type="text">Contract ESIF-9999:5.0 was Published to Provider</title>
-  <summary type="text">{'UKPRN': 10000001, 'contractNumber': 'ESIF-9999', 'version': 5}</summary>
+  <title type="text">Contract ESIF-9999:1.0 was Published to Provider</title>
+  <summary type="text">{'UKPRN': 10000001, 'contractNumber': 'ESIF-9999', 'version': 1}</summary>
   <published>2021-01-01T01:01:01Z</published>
   <updated>2021-01-02T01:01:01Z</updated>
   <category term="Contract Published to Provider" label="A contract has been Published to Provider" />
@@ -13,7 +13,7 @@
             <fundingTypeCode>ESF</fundingTypeCode>
           </fundingType>
           <period>
-            <period>1420</period>
+            <period>1426</period>
           </period>
           <contractAllocations>
             <contractAllocation>
@@ -26,14 +26,14 @@
             </contractAllocation>
           </contractAllocations>
           <contractNumber>ESIF-9999</contractNumber>
-          <contractVersionNumber>5</contractVersionNumber>
-          <ContractApprovalDate>2019-03-01</ContractApprovalDate>
+          <contractVersionNumber>1</contractVersionNumber>
+          <ContractApprovalDate>2024-06-02</ContractApprovalDate>
           <contractor>
             <ukprn>10000001</ukprn>
           </contractor>
           <contractType>Contract for Services</contractType>
-          <startDate>2019-04-01</startDate>
-          <endDate>2023-03-31</endDate>
+			<startDate>2024-06-01</startDate>
+			<endDate>2025-03-31</endDate>
           <contractStatus>
             <status>Published To Provider</status>
             <parentStatus>Draft</parentStatus>
