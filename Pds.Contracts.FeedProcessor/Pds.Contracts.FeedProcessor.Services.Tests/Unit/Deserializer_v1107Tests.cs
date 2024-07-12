@@ -19,7 +19,6 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
     [TestClass, TestCategory("Unit")]
     public class Deserializer_v1107Tests
     {
-        private const string _partialXmlDocument = "ESIF-9999-v5-Partial.xml";
         private readonly string _baseDirectory = AppDomain.CurrentDomain.BaseDirectory + "/Documents/11_07";
 
         private readonly IContractEventValidationService _validationService
@@ -427,15 +426,16 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("hte-sif", ContractFundingType.HigherTechnicalEducationSkillsInjectionFund)]
         [DataRow("fe-rca", ContractFundingType.FEReclassificationCapitalAllocation)]
         [DataRow("fe-ctf", ContractFundingType.FECapitalTransformationFundAllocation)]
-        [DataRow("aeb2023", ContractFundingType.AdultEducationBudgetProcured2023)]
+        [DataRow("aeb2023", ContractFundingType.AdultEducationBudgetProcured2023, "AEBP23-1001", "AEB2023-AS2324", "AEBA23-1020", "AEBP23-1001-v1-Partial.xml")]
         [DataRow("sbd", ContractFundingType.SkillsBootcampsDPS)]
         [DataRow("hte-sif2", ContractFundingType.HigherTechnicalEducationSkillsInjectionFund2)]
+        [DataRow("aeb2023", ContractFundingType.AdultSkillsFundProcured2023, "ASFP23-1001", "ASF2023-AS2425", "ASFA23-1000", "ASFP23-1001-v1-Partial.xml")]
         [DataRow("SomeOtherValue", ContractFundingType.Unknown)]
         [TestMethod, TestCategory("Unit")]
-        public async Task Deserialize_PartialXML_ValidateFundingTypeEnum_ReturnsExpectedResult(string fundingType, ContractFundingType expectedType)
+        public async Task Deserialize_PartialXML_ValidateFundingTypeEnum_ReturnsExpectedResult(string fundingType, ContractFundingType expectedType, string contractNumber = null, string fspCode = null, string contractAllocationNumber = null, string xmlFileName = "ESIF-9999-v1-Partial.xml")
         {
             // Arrange
-            string xml = LoadPartialXMLFile();
+            string xml = LoadPartialXMLFile(xmlFileName);
             var document = new XmlDocument();
             document.LoadXml(xml);
 
@@ -444,6 +444,14 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
             document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:fundingType/c:fundingTypeCode", ns).InnerText = fundingType;
 
+            var expected = GeneratePocoForESIF9999(document);
+
+            if (!string.IsNullOrWhiteSpace(contractNumber))
+            {
+                document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:contractNumber", ns).InnerText = contractNumber;
+                expected = GeneratePocoForESIF9999(document, ContractProcessResultType.Successful, contractNumber, contractAllocationNumber, expectedType, "2425", fspCode);
+            }
+
             xml = SaveXMLChangesToXmlString(document);
 
             ILoggerAdapter_SetupLogInformation();
@@ -451,7 +459,6 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             IContractValidationService_Setup_ValidateFundingType();
             IContractValidationService_Setup_ValidateXmlWithSchema(document);
 
-            var expected = GeneratePocoForESIF9999(document);
             expected.First().ContractEvent.FundingType = expectedType;
 
             var sut = GetDeserializer();
@@ -462,7 +469,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             // Assert
             actual.Should().BeEquivalentTo(expected, "Because the input XML has all required fields.");
             Verify_All();
-        }        
+        }
 
         [DataRow("Draft", ContractParentStatus.Draft)]
         [DataRow("Approved", ContractParentStatus.Approved)]
@@ -645,7 +652,14 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             };
         }
 
-        private static IList<ContractProcessResult> GeneratePocoForESIF9999(XmlDocument document = null, ContractProcessResultType result = ContractProcessResultType.Successful)
+        private static IList<ContractProcessResult> GeneratePocoForESIF9999(
+            XmlDocument document = null,
+            ContractProcessResultType result = ContractProcessResultType.Successful,
+            string contractNumber = "ESIF-9999",
+            string contractAllocationNumber = "ESF-9999",
+            ContractFundingType contractFundingType = ContractFundingType.Esf,
+            string period = "1426",
+            string fspCode = "ESF1420")
         => new List<ContractProcessResult>
         {
             new ContractProcessResult
@@ -658,22 +672,22 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                     {
                         new ContractAllocation()
                         {
-                            ContractAllocationNumber = "ESF-9999",
-                            FundingStreamPeriodCode = "ESF1420",
+                            ContractAllocationNumber = contractAllocationNumber,
+                            FundingStreamPeriodCode = fspCode,
                             LEPArea = "LEP Name",
                             TenderSpecTitle = "SSW"
                         }
                     },
                     ContractEventXml = null,
-                    ContractNumber = "ESIF-9999",
-                    ContractPeriodValue = "1420",
-                    ContractVersion = 5,
-                    EndDate = new DateTime(2023, 03, 31),
-                    FundingType = ContractFundingType.Esf,
+                    ContractNumber = contractNumber,
+                    ContractPeriodValue = period,
+                    ContractVersion = 1,
+                    EndDate = new DateTime(2025, 03, 31),
+                    FundingType = contractFundingType,
                     ParentContractNumber = "ESFA-10001",
                     ParentStatus = ContractParentStatus.Draft,
-                    StartDate = new DateTime(2019, 04, 01),
-                    SignedOn = new DateTime(2019, 03, 01),
+                    StartDate = new DateTime(2024, 06, 01),
+                    SignedOn = new DateTime(2024, 06, 02),
                     Status = ContractStatus.PublishedToProvider,
                     Type = "Contract for Services",
                     UKPRN = 10000001,
@@ -695,11 +709,11 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         private Deserializer_v1107 GetDeserializer()
             => new Deserializer_v1107(_validationService, _auditService, _loggerAdapter);
 
-        private string LoadPartialXMLFile()
+        private string LoadPartialXMLFile(string filename = "ESIF-9999-v1-Partial.xml")
         {
-            string filename = Path.Combine(_baseDirectory, _partialXmlDocument);
+            string filePath = Path.Combine(_baseDirectory, filename);
             var document = new XmlDocument();
-            document.Load(filename);
+            document.Load(filePath);
             var xml = document.SelectSingleNode("/entry/content").OuterXml;
             return xml;
         }

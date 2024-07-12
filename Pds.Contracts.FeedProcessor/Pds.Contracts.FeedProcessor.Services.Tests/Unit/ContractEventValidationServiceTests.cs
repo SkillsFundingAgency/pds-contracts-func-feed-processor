@@ -22,7 +22,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         private const string _validXmlDocument = "EDSK-9999-v1-Valid.xml";
         private const string _invalidSchemaXmlDocument = "EDSK-9999-v1-Invalid-SchemaNumber.xml";
         private const string _validXmlDocumentWithoutSchemaVersion = "EDSK-9999-v1-Valid-NoSchemaVersion.xml";
-        private const string _partialXmlDocument = "ESIF-9999-v5-Partial.xml";
+        private const string _partialXmlDocument = "ESIF-9999-v1-Partial.xml";
 
         private readonly SchemaValidationSettings _validationSettings = new SchemaValidationSettings();
         private readonly string _baseDirectory = AppDomain.CurrentDomain.BaseDirectory + "/Documents/11_07/";

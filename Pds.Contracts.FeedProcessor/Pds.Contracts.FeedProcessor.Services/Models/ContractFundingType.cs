@@ -217,6 +217,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Models
 
         /// <summary>
         /// ESFA Adult Education Budget (procured from Aug 2023).
+        /// Shares AEB2023 funding type from FCS with ESFA Adult Skills Fund (procured from Aug 2023).
         /// </summary>
         [Display(Name = "ESFA Adult Education Budget (procured from Aug 2023)", Description = "ESFA Adult Education Budget (procured from Aug 2023)")]
         AdultEducationBudgetProcured2023 = 34,
@@ -232,5 +233,12 @@ namespace Pds.Contracts.FeedProcessor.Services.Models
         /// </summary>
         [Display(Name = "Higher technical education skills injection fund 2", Description = "Higher technical education skills injection fund 2")]
         HigherTechnicalEducationSkillsInjectionFund2 = 36,
+
+        /// <summary>
+        /// ESFA Adult Skills Fund (procured from Aug 2023).
+        /// Shares AEB2023 funding type from FCS with ESFA Adult Education Budget (procured from Aug 2023).
+        /// </summary>
+        [Display(Name = "ESFA Adult Skills Fund (procured from Aug 2023)", Description = "ESFA Adult Skills Fund (procured from Aug 2023)")]
+        AdultSkillsFundProcured2023 = 37
     }
 }
