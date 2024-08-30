@@ -577,7 +577,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 "fe-ctf",
                 "aeb2023",
                 "sbd",
-                "hte-sif2"
+                "hte-sif2",
+                "ttf"
             };
 
         #endregion

@@ -239,6 +239,12 @@ namespace Pds.Contracts.FeedProcessor.Services.Models
         /// Shares AEB2023 funding type from FCS with ESFA Adult Education Budget (procured from Aug 2023).
         /// </summary>
         [Display(Name = "ESFA Adult Skills Fund (procured from Aug 2023)", Description = "ESFA Adult Skills Fund (procured from Aug 2023)")]
-        AdultSkillsFundProcured2023 = 37
+        AdultSkillsFundProcured2023 = 37,
+
+        /// <summary>
+        /// Taking teaching further.
+        /// </summary>
+        [Display(Name = "Taking teaching further", Description = "Taking teaching further")]
+        TakingTeachingFurther = 38
     }
 }
