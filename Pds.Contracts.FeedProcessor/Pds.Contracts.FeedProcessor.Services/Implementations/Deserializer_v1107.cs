@@ -238,6 +238,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "aeb2023" => DetermineContractFundingType(contractNumber),
                 "sbd" => ContractFundingType.SkillsBootcampsDPS,
                 "hte-sif2" => ContractFundingType.HigherTechnicalEducationSkillsInjectionFund2,
+                "ttf" => ContractFundingType.TakingTeachingFurther,
                 _ => ContractFundingType.Unknown
             };
         }
