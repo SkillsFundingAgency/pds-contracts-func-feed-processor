@@ -17,15 +17,15 @@ using System.Xml.Schema;
 namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 {
     [TestClass, TestCategory("Unit")]
-    public class Deserializer_v1107Tests
+    public class Deserializer_v1108Tests
     {
-        private readonly string _baseDirectory = AppDomain.CurrentDomain.BaseDirectory + "/Documents/11_07";
+        private readonly string _baseDirectory = AppDomain.CurrentDomain.BaseDirectory + "/Documents/11_08";
 
         private readonly IContractEventValidationService _validationService
             = Mock.Of<IContractEventValidationService>(MockBehavior.Strict);
 
-        private readonly ILoggerAdapter<Deserializer_v1107> _loggerAdapter
-            = Mock.Of<ILoggerAdapter<Deserializer_v1107>>(MockBehavior.Strict);
+        private readonly ILoggerAdapter<Deserializer_v1108> _loggerAdapter
+            = Mock.Of<ILoggerAdapter<Deserializer_v1108>>(MockBehavior.Strict);
 
 
         private readonly IAuditService _auditService
@@ -160,7 +160,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
-            ns.AddNamespace("c", Deserializer_v1107._contractEvent_Namespace);
+            ns.AddNamespace("c", Deserializer_v1108._contractEvent_Namespace);
 
             var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:contractor/c:ukprn", ns);
             node.ParentNode.RemoveChild(node);
@@ -191,7 +191,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
-            ns.AddNamespace("c", Deserializer_v1107._contractEvent_Namespace);
+            ns.AddNamespace("c", Deserializer_v1108._contractEvent_Namespace);
 
             var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:parentContractNumber", ns);
             node.ParentNode.RemoveChild(node);
@@ -222,7 +222,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
-            ns.AddNamespace("c", Deserializer_v1107._contractEvent_Namespace);
+            ns.AddNamespace("c", Deserializer_v1108._contractEvent_Namespace);
 
             var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:contractAllocations/c:contractAllocation/c:fundingStreamPeriodCode", ns);
             node.ParentNode.RemoveChild(node);
@@ -250,7 +250,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
-            ns.AddNamespace("c", Deserializer_v1107._contractEvent_Namespace);
+            ns.AddNamespace("c", Deserializer_v1108._contractEvent_Namespace);
 
             var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:contractAllocations/c:contractAllocation/c:contractAllocationNumber", ns);
             node.ParentNode.RemoveChild(node);
@@ -278,7 +278,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
-            ns.AddNamespace("c", Deserializer_v1107._contractEvent_Namespace);
+            ns.AddNamespace("c", Deserializer_v1108._contractEvent_Namespace);
 
             var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:startDate", ns);
             node.ParentNode.RemoveChild(node);
@@ -311,7 +311,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
-            ns.AddNamespace("c", Deserializer_v1107._contractEvent_Namespace);
+            ns.AddNamespace("c", Deserializer_v1108._contractEvent_Namespace);
 
             var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:endDate", ns);
             node.ParentNode.RemoveChild(node);
@@ -344,7 +344,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
-            ns.AddNamespace("c", Deserializer_v1107._contractEvent_Namespace);
+            ns.AddNamespace("c", Deserializer_v1108._contractEvent_Namespace);
 
             var node = document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:ContractApprovalDate", ns);
             node.ParentNode.RemoveChild(node);
@@ -441,7 +441,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
-            ns.AddNamespace("c", Deserializer_v1107._contractEvent_Namespace);
+            ns.AddNamespace("c", Deserializer_v1108._contractEvent_Namespace);
 
             document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:fundingType/c:fundingTypeCode", ns).InnerText = fundingType;
 
@@ -485,7 +485,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
-            ns.AddNamespace("c", Deserializer_v1107._contractEvent_Namespace);
+            ns.AddNamespace("c", Deserializer_v1108._contractEvent_Namespace);
 
             document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:contractStatus/c:parentStatus", ns).InnerText = parentStatus;
 
@@ -530,7 +530,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
-            ns.AddNamespace("c", Deserializer_v1107._contractEvent_Namespace);
+            ns.AddNamespace("c", Deserializer_v1108._contractEvent_Namespace);
 
             document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:contractStatus/c:status", ns).InnerText = contractStatus;
 
@@ -566,7 +566,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             document.LoadXml(xml);
 
             var ns = new XmlNamespaceManager(new NameTable());
-            ns.AddNamespace("c", Deserializer_v1107._contractEvent_Namespace);
+            ns.AddNamespace("c", Deserializer_v1108._contractEvent_Namespace);
 
             document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:amendmentType", ns).InnerText = amendment;
 
@@ -707,8 +707,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             return stringWriter.ToString();
         }
 
-        private Deserializer_v1107 GetDeserializer()
-            => new Deserializer_v1107(_validationService, _auditService, _loggerAdapter);
+        private Deserializer_v1108 GetDeserializer()
+            => new Deserializer_v1108(_validationService, _auditService, _loggerAdapter);
 
         private string LoadPartialXMLFile(string filename = "ESIF-9999-v1-Partial.xml")
         {

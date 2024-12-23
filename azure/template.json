@@ -242,7 +242,7 @@
               },
               {
                 "name": "SchemaValidationSettings:SchemaManifestFilename",
-                "value": "contract_corporate_schema_v11.07.xsd"
+                "value": "contract_corporate_schema_v11.08.xsd"
               },
               {
                 "name": "SchemaValidationSettings:EnableSchemaVersionValidation",
