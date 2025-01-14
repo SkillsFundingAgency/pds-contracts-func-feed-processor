@@ -11,6 +11,7 @@
     <None Remove="Schema\11_05\contract_corporate_schema_v11.05.xsd" />
     <None Remove="Schema\11_06\contract_corporate_schema_v11.06.xsd" />
     <None Remove="Schema\11_07\contract_corporate_schema_v11.07.xsd" />
+    <None Remove="Schema\11_08\contract_corporate_schema_v11.08.xsd" />
   </ItemGroup>
 
   <ItemGroup>
@@ -27,6 +28,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>  
     <EmbeddedResource Include="Schema\11_07\contract_corporate_schema_v11.07.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>  
+    <EmbeddedResource Include="Schema\11_08\contract_corporate_schema_v11.08.xsd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

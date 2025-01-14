@@ -1,12 +1,12 @@
 ﻿<entry>
 	<id>uuid:12345678-9abc-def0-1234-123456789124</id>
-	<title type="text">Contract AEBP23-1001:1.0 was Published to Provider</title>
-	<summary type="text">{'UKPRN': 10000001, 'contractNumber': 'AEBP23-1001', 'version': 1}</summary>
+	<title type="text">Contract ASFP23-1001:1.0 was Published to Provider</title>
+	<summary type="text">{'UKPRN': 10000001, 'contractNumber': 'ASFP23-1001', 'version': 1}</summary>
 	<published>2024-06-01T01:01:01Z</published>
-	<updated>2024-06-02T01:01:01Z</updated>
+	<updated>2024-06-T01:01:01Z</updated>
 	<category term="Contract Published to Provider" label="A contract has been Published to Provider" />
 	<content type="application/vnd.sfa.contract.v1+atom+xml">
-		<contract schemaVersion="11.07" xmlns="urn:sfa:schemas:contract" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+		<contract schemaVersion="11.08" xmlns="urn:sfa:schemas:contract" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 			<contracts>
 				<contract>
 					<fundingType>
@@ -17,15 +17,15 @@
 					</period>
 					<contractAllocations>
 						<contractAllocation>
-							<contractAllocationNumber>AEBA23-1020</contractAllocationNumber>
-							<fundingStreamPeriodCode>AEB2023-AS2324</fundingStreamPeriodCode>
+							<contractAllocationNumber>ASFA23-1000</contractAllocationNumber>
+							<fundingStreamPeriodCode>ASF2023-AS2425</fundingStreamPeriodCode>
 							<ProcurementAttrs>
 								<TenderSpecTitle>SSW</TenderSpecTitle>
 								<LEPName>LEP Name</LEPName>
 							</ProcurementAttrs>
 						</contractAllocation>
 					</contractAllocations>
-					<contractNumber>AEBP23-1001</contractNumber>
+					<contractNumber>ASFP23-1001</contractNumber>
 					<contractVersionNumber>1</contractVersionNumber>
 					<ContractApprovalDate>2024-06-02</ContractApprovalDate>
 					<contractor>
