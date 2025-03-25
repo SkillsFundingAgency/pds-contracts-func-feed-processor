@@ -38,6 +38,9 @@
     "sharedStorageAccountName": {
       "type": "string"
     },
+    "sharedKeyVaultName": {
+      "type": "string"      
+    },
     "ActionGroupName": {
       "type": "string",
       "defaultValue": ""
@@ -66,10 +69,7 @@
     },
     "FcsApiAzureAdClientId": {
       "type": "string"
-    },
-    "FcsApiAzureAdClientSecret": {
-      "type": "securestring"
-    },
+    },    
     "FcsApiAzureAdAppUri": {
       "type": "string"
     },
@@ -81,9 +81,6 @@
     },
     "AuditApiAzureAdClientId": {
       "type": "string"
-    },
-    "AuditApiAzureAdClientSecret": {
-      "type": "securestring"
     },
     "AuditApiAzureAdAppUri": {
       "type": "string"
@@ -299,7 +296,7 @@
               },
               {
                 "name": "AuditApiConfiguration:ClientSecret",
-                "value": "[parameters('AuditApiAzureAdClientSecret')]"
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=SharedAuditDataApiSecret)')]"
               },
               {
                 "name": "AuditApiConfiguration:AppUri",
@@ -327,7 +324,7 @@
               },
               {
                 "name": "FeedReaderOptions:ClientSecret",
-                "value": "[parameters('FcsApiAzureAdClientSecret')]"
+                "value": "[concat('@Microsoft.KeyVault(VaultName=', parameters('sharedKeyVaultName'), ';SecretName=FcsApiClientConfigurationSecret)')]"
               },
               {
                 "name": "FeedReaderOptions:TenantId",
