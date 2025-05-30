@@ -426,14 +426,15 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         [DataRow("hte-sif", ContractFundingType.HigherTechnicalEducationSkillsInjectionFund)]
         [DataRow("fe-rca", ContractFundingType.FEReclassificationCapitalAllocation)]
         [DataRow("fe-ctf", ContractFundingType.FECapitalTransformationFundAllocation)]
-        [DataRow("aeb2023", ContractFundingType.AdultEducationBudgetProcured2023, "AEBP23-1001", "AEB2023-AS2324", "AEBA23-1020", "AEBP23-1001-v1-Partial.xml")]
+        [DataRow("aeb2023", ContractFundingType.AdultEducationBudgetProcured2023, "AEBP23-1001", "AEB2023-AS2324", "AEBA23-1020", "AEBP23-1001-v1-Partial.xml", "2425")]
         [DataRow("sbd", ContractFundingType.SkillsBootcampsDPS)]
         [DataRow("hte-sif2", ContractFundingType.HigherTechnicalEducationSkillsInjectionFund2)]
-        [DataRow("aeb2023", ContractFundingType.AdultSkillsFundProcured2023, "ASFP23-1001", "ASF2023-AS2425", "ASFA23-1000", "ASFP23-1001-v1-Partial.xml")]
+        [DataRow("aeb2023", ContractFundingType.AdultSkillsFundProcured2023, "ASFP23-1001", "ASF2023-AS2425", "ASFA23-1000", "ASFP23-1001-v1-Partial.xml", "2425")]
+        [DataRow("aeb2023", ContractFundingType.AdultSkillsFund, "ASFP23-1002", "ASF2023-AS2526", "ASFA23-1001", "ASFP23-1002-v1-Partial.xml", "2526", "2025-05-01")]
         [DataRow("ttf", ContractFundingType.TakingTeachingFurther)]
         [DataRow("SomeOtherValue", ContractFundingType.Unknown)]
         [TestMethod, TestCategory("Unit")]
-        public async Task Deserialize_PartialXML_ValidateFundingTypeEnum_ReturnsExpectedResult(string fundingType, ContractFundingType expectedType, string contractNumber = null, string fspCode = null, string contractAllocationNumber = null, string xmlFileName = "ESIF-9999-v1-Partial.xml")
+        public async Task Deserialize_PartialXML_ValidateFundingTypeEnum_ReturnsExpectedResult(string fundingType, ContractFundingType expectedType, string contractNumber = null, string fspCode = null, string contractAllocationNumber = null, string xmlFileName = "ESIF-9999-v1-Partial.xml", string period = "1426", string date = "2024-06-01")
         {
             // Arrange
             string xml = LoadPartialXMLFile(xmlFileName);
@@ -450,7 +451,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             if (!string.IsNullOrWhiteSpace(contractNumber))
             {
                 document.SelectSingleNode("/content/c:contract/c:contracts/c:contract/c:contractNumber", ns).InnerText = contractNumber;
-                expected = GeneratePocoForESIF9999(document, ContractProcessResultType.Successful, contractNumber, contractAllocationNumber, expectedType, "2425", fspCode);
+                expected = GeneratePocoForESIF9999(document, ContractProcessResultType.Successful, contractNumber, contractAllocationNumber, expectedType, period, fspCode, date);
             }
 
             xml = SaveXMLChangesToXmlString(document);
@@ -660,7 +661,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             string contractAllocationNumber = "ESF-9999",
             ContractFundingType contractFundingType = ContractFundingType.Esf,
             string period = "1426",
-            string fspCode = "ESF1420")
+            string fspCode = "ESF1420",
+            string date = "2024-06-01")
         => new List<ContractProcessResult>
         {
             new ContractProcessResult
@@ -683,12 +685,12 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                     ContractNumber = contractNumber,
                     ContractPeriodValue = period,
                     ContractVersion = 1,
-                    EndDate = new DateTime(2025, 03, 31),
+                    EndDate = DateTime.Parse(date).AddDays(303),
                     FundingType = contractFundingType,
                     ParentContractNumber = "ESFA-10001",
                     ParentStatus = ContractParentStatus.Draft,
-                    StartDate = new DateTime(2024, 06, 01),
-                    SignedOn = new DateTime(2024, 06, 02),
+                    StartDate = DateTime.Parse(date),
+                    SignedOn = DateTime.Parse(date).AddDays(1),
                     Status = ContractStatus.PublishedToProvider,
                     Type = "Contract for Services",
                     UKPRN = 10000001,

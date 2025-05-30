@@ -144,7 +144,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             evt.Type = contractElement.GetValue<string>("c:contractType", ns, true);
 
             var fundingType = contractElement.GetValue<string>("c:fundingType/c:fundingTypeCode", ns);
-            evt.FundingType = ParseContractFundingType(fundingType, contractNumber);
+            evt.FundingType = ParseContractFundingType(fundingType, contractNumber, evt.ContractPeriodValue);
 
             // Start date can be null
             evt.StartDate = contractElement.GetValue<DateTime?>("c:startDate", ns, true);
@@ -201,7 +201,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             };
         }
 
-        private ContractFundingType ParseContractFundingType(string fundingType, string contractNumber)
+        private ContractFundingType ParseContractFundingType(string fundingType, string contractNumber, string contractPeriodValue)
         {
             return string.IsNullOrEmpty(fundingType) ? ContractFundingType.Unknown : fundingType.ToLower() switch
             {
@@ -235,7 +235,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "hte-sif" => ContractFundingType.HigherTechnicalEducationSkillsInjectionFund,
                 "fe-rca" => ContractFundingType.FEReclassificationCapitalAllocation,
                 "fe-ctf" => ContractFundingType.FECapitalTransformationFundAllocation,
-                "aeb2023" => DetermineContractFundingType(contractNumber),
+                "aeb2023" => DetermineContractFundingType(contractNumber, contractPeriodValue),
                 "sbd" => ContractFundingType.SkillsBootcampsDPS,
                 "hte-sif2" => ContractFundingType.HigherTechnicalEducationSkillsInjectionFund2,
                 "ttf" => ContractFundingType.TakingTeachingFurther,
@@ -243,10 +243,11 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             };
         }
 
-        private ContractFundingType DetermineContractFundingType(string contractNumber)
+        private ContractFundingType DetermineContractFundingType(string contractNumber, string contractPeriodValue)
         {
             return contractNumber.ToLower().StartsWith("asfp23")
-                ? ContractFundingType.AdultSkillsFundProcured2023
+                ? (int.Parse(contractPeriodValue) >= 2526 ? ContractFundingType.AdultSkillsFund
+                : ContractFundingType.AdultSkillsFundProcured2023)
                 : ContractFundingType.AdultEducationBudgetProcured2023;
         }
     }
