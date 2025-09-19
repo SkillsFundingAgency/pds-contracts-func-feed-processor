@@ -221,7 +221,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "aeb2023",
                 "sbd",
                 "hte-sif2",
-                "ttf"
+                "ttf",
+                "ttfy2"
             };
 
         #endregion

@@ -239,6 +239,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "sbd" => ContractFundingType.SkillsBootcampsDPS,
                 "hte-sif2" => ContractFundingType.HigherTechnicalEducationSkillsInjectionFund2,
                 "ttf" => ContractFundingType.TakingTeachingFurther,
+                "ttfy2" => ContractFundingType.TakingTeachingFurtherYear2,
                 _ => ContractFundingType.Unknown
             };
         }
