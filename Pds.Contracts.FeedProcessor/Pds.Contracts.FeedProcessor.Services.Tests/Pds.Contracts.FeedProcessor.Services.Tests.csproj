@@ -24,21 +24,21 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <None Update="Documents\11_08\AEBP23-1001-v1-Partial.xml">
+	  <None Update="Documents\11_09\AEBP23-1001-v1-Partial.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Documents\11_08\ASFP23-1001-v1-Partial.xml">
+	  <None Update="Documents\11_09\ASFP23-1001-v1-Partial.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Documents\11_08\ASFP23-1002-v1-Partial.xml">
+	  <None Update="Documents\11_09\ASFP23-1002-v1-Partial.xml">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-	  <None Update="Documents\11_08\ESIF-9999-v1-Partial.xml">
+	  <None Update="Documents\11_09\ESIF-9999-v1-Partial.xml">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </None>
-    <None Update="local.settings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+	  <None Update="local.settings.json">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
   </ItemGroup>
 
 </Project>

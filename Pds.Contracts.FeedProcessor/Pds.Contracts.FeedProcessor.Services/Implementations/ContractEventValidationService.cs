@@ -38,9 +38,9 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
             _configReader = configReader;
             _logger = logger;
 
-            if (_options.SchemaVersion == "11_08")
+            if (_options.SchemaVersion == "11_09")
             {
-                _logger.LogInformation($"[{nameof(ContractEventValidationService)}] Loading schema version 11.08.");
+                _logger.LogInformation($"[{nameof(ContractEventValidationService)}] Loading schema version 11.09.");
                 _xmlSchema = ReadSchemaFile(_options.SchemaManifestFilename);
             }
             else
@@ -222,7 +222,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Implementations
                 "sbd",
                 "hte-sif2",
                 "ttf",
-                "ttfy2"
+                "ttfy2",
+                "ctec"
             };
 
         #endregion

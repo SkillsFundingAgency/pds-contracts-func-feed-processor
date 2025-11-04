@@ -25,7 +25,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
         private const string _partialXmlDocument = "ESIF-9999-v1-Partial.xml";
 
         private readonly SchemaValidationSettings _validationSettings = new SchemaValidationSettings();
-        private readonly string _baseDirectory = AppDomain.CurrentDomain.BaseDirectory + "/Documents/11_08/";
+        private readonly string _baseDirectory = AppDomain.CurrentDomain.BaseDirectory + "/Documents/11_09/";
 
         private readonly ILoggerAdapter<ContractEventValidationService> _logger
             = Mock.Of<ILoggerAdapter<ContractEventValidationService>>(MockBehavior.Strict);
@@ -35,8 +35,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
 
         public ContractEventValidationServiceTests()
         {
-            _validationSettings.SchemaVersion = "11_08";
-            _validationSettings.SchemaManifestFilename = "contract_corporate_schema_v11.08.xsd";
+            _validationSettings.SchemaVersion = "11_09";
+            _validationSettings.SchemaManifestFilename = "contract_corporate_schema_v11.09.xsd";
             _validationSettings.EnableSchemaVersionValidation = true;
         }
 
@@ -103,7 +103,7 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
             XmlDocument expected = new XmlDocument();
             expected.LoadXml(fileContents);
 
-            _validationSettings.SchemaVersion = "11_08";
+            _validationSettings.SchemaVersion = "11_09";
             _validationSettings.SchemaManifestFilename = "none-existant-file.xsd";
 
             ILoggerAdapter_Setup_LogInformation();
@@ -579,7 +579,8 @@ namespace Pds.Contracts.FeedProcessor.Services.Tests.Unit
                 "sbd",
                 "hte-sif2",
                 "ttf",
-                "ttfy2"
+                "ttfy2",
+                "ctec"
             };
 
         #endregion

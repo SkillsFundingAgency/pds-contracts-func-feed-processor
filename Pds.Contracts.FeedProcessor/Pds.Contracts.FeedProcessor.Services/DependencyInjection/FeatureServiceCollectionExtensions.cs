@@ -64,7 +64,7 @@ namespace Pds.Contracts.FeedProcessor.Services.DependencyInjection
 
             services.AddAuditApiClient(config, policyRegistry);
 
-            services.AddScoped<IDeserilizationService<ContractProcessResult>, Deserializer_v1108>();
+            services.AddScoped<IDeserilizationService<ContractProcessResult>, Deserializer_v1109>();
             services.AddScoped<IBlobStorageService, BlobStorageService>((serviceProvider) =>
             {
                 return new BlobStorageService(GetBlobContainerClient(storageSettings), serviceProvider.GetRequiredService<ILoggerAdapter<BlobStorageService>>());
